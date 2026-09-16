@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VidyutYatraa OCPI 2.2.1 EMSP Simulator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --card-border: #334155;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --code-bg: #090d16;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 24px;
+            line-height: 1.5;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--card-border);
+        }
+        .header h1 { font-size: 22px; font-weight: 700; color: #fff; }
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .badge-success { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+        .badge-danger { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
+        .badge-warning { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+        .badge-info { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); }
+
+        .banner {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(16, 185, 129, 0.15));
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .banner-label { font-size: 12px; text-transform: uppercase; color: var(--text-muted); font-weight: 600; }
+        .banner-url { font-family: 'JetBrains Mono', monospace; font-size: 16px; color: #38bdf8; font-weight: 600; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 20px;
+        }
+        .col-4 { grid-column: span 4; }
+        .col-8 { grid-column: span 8; }
+        .col-6 { grid-column: span 6; }
+        .col-12 { grid-column: span 12; }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 20px;
+        }
+        .card h2 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .form-group { margin-bottom: 12px; }
+        label { display: block; font-size: 12px; font-weight: 500; color: var(--text-muted); margin-bottom: 4px; }
+        input[type="text"], input[type="number"], select {
+            width: 100%;
+            background: #090d16;
+            border: 1px solid var(--card-border);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-family: inherit;
+        }
+        input:focus { outline: none; border-color: var(--primary); }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn:hover { background: var(--primary-hover); }
+        .btn-success { background: #059669; }
+        .btn-success:hover { background: #047857; }
+        .btn-danger { background: #dc2626; }
+        .btn-danger:hover { background: #b91c1c; }
+        .btn-secondary { background: #334155; color: #e2e8f0; }
+        .btn-secondary:hover { background: #475569; }
+
+        .table-wrap {
+            overflow-x: auto;
+            max-height: 280px;
+            overflow-y: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            text-align: left;
+        }
+        th {
+            background: #090d16;
+            color: var(--text-muted);
+            font-weight: 600;
+            padding: 8px 12px;
+            position: sticky;
+            top: 0;
+            border-bottom: 1px solid var(--card-border);
+        }
+        td {
+            padding: 8px 12px;
+            border-bottom: 1px solid #1e293b;
+        }
+        tr:hover td { background: rgba(255,255,255,0.02); }
+
+        pre.log-box {
+            background: var(--code-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 12px;
+            color: #cbd5e1;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            max-height: 240px;
+            overflow-y: auto;
+        }
+        .flex-row { display: flex; gap: 8px; }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <div>
+            <h1>⚡ VidyutYatraa OCPI 2.2.1 EMSP Simulator (Django)</h1>
+            <p style="font-size: 13px; color: var(--text-muted);">Self-Hosted EV Roaming Simulator & Command Callback Receiver</p>
+        </div>
+        <div>
+            <span class="badge badge-success">● System Operational</span>
+        </div>
+    </div>
+
+    <!-- Active Callback Address Banner -->
+    <div class="banner">
+        <div>
+            <div class="banner-label">Public Callback Base URL (Announced to CPO)</div>
+            <div class="banner-url" id="live-base-url">{{ detected_public_url }}</div>
+        </div>
+        <div style="text-align: right;">
+            <div class="banner-label">Assigned Response URL</div>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #a7f3d0;">
+                {{ detected_public_url }}/ocpi/emsp/2.2.1/commands/callback
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="grid">
+
+        <!-- 1. Configuration & Identity -->
+        <div class="card col-4">
+            <h2>⚙️ Partner Configuration <button class="btn btn-secondary" onclick="saveConfig()" style="font-size: 11px; padding: 4px 8px;">Save</button></h2>
+            <div class="form-group">
+                <label>CPO API Base URL</label>
+                <input type="text" id="cfg-cpo-url" value="{{ config.cpo_url }}">
+            </div>
+            <div class="form-group">
+                <label>Public Base URL (Override if behind NAT/Tunnel)</label>
+                <input type="text" id="cfg-public-url" value="{{ config.public_base_url }}" placeholder="e.g. http://13.232.241.179:8000">
+            </div>
+            <div class="flex-row">
+                <div class="form-group" style="flex: 1;">
+                    <label>Party ID</label>
+                    <input type="text" id="cfg-party-id" value="{{ config.party_id }}">
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label>Country Code</label>
+                    <input type="text" id="cfg-country-code" value="{{ config.country_code }}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Token A (Bootstrap Token for Initial Handshake)</label>
+                <input type="text" id="cfg-token-a" value="{{ config.token_a }}" placeholder="Pre-shared token provided by CPO">
+            </div>
+            <div class="form-group">
+                <label>Token B (Permanent Token to Call CPO)</label>
+                <input type="text" id="cfg-token-b" value="{{ config.token_b }}">
+            </div>
+            <div class="form-group">
+                <label>Token C (Secret for CPO to Call Back)</label>
+                <input type="text" id="cfg-token-c" value="{{ config.token_c }}">
+            </div>
+        </div>
+
+        <!-- 2. Actions & Discovery -->
+        <div class="card col-8">
+            <h2>🚀 CPO Roaming Actions</h2>
+            <div class="flex-row" style="margin-bottom: 16px; flex-wrap: wrap;">
+                <button class="btn btn-success" onclick="triggerAction('/ui/action/handshake')">🤝 Credentials Handshake</button>
+                <button class="btn" onclick="triggerAction('/ui/action/locations')">📍 Fetch Locations</button>
+                <button class="btn" onclick="triggerAction('/ui/action/tariffs')">💰 Fetch Tariffs</button>
+                <button class="btn btn-secondary" onclick="registerToken()">💳 Register Test RFID Token</button>
+            </div>
+
+            <div class="grid" style="margin-top: 10px;">
+                <!-- START SESSION -->
+                <div class="col-6" style="background: #090d16; padding: 12px; border-radius: 8px; border: 1px solid var(--card-border);">
+                    <h3 style="font-size: 14px; margin-bottom: 8px; color: #34d399;">▶️ START_SESSION Command</h3>
+                    <div class="form-group">
+                        <label>Location ID</label>
+                        <input type="text" id="cmd-loc-id" value="VYKA001">
+                    </div>
+                    <div class="form-group">
+                        <label>EVSE UID</label>
+                        <input type="text" id="cmd-evse-uid" value="IN*VYT*EVYKA001">
+                    </div>
+                    <div class="flex-row">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Connector ID</label>
+                            <input type="number" id="cmd-conn-id" value="1">
+                        </div>
+                        <div class="form-group" style="flex: 2;">
+                            <label>Token UID</label>
+                            <input type="text" id="cmd-token-uid" value="RFID-TEST-001">
+                        </div>
+                    </div>
+                    <button class="btn btn-success" onclick="startSession()" style="width: 100%; margin-top: 4px;">Send START_SESSION</button>
+                </div>
+
+                <!-- STOP SESSION -->
+                <div class="col-6" style="background: #090d16; padding: 12px; border-radius: 8px; border: 1px solid var(--card-border);">
+                    <h3 style="font-size: 14px; margin-bottom: 8px; color: #f87171;">⏹️ STOP_SESSION Command</h3>
+                    <div class="form-group">
+                        <label>Session ID / Transaction ID</label>
+                        <input type="text" id="cmd-session-id" placeholder="Paste session UUID or transaction ID">
+                    </div>
+                    <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">CPO resolves session via <code>sessionId-index</code> or numeric transaction ID.</p>
+                    <button class="btn btn-danger" onclick="stopSession()" style="width: 100%; margin-top: 24px;">Send STOP_SESSION</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. INCOMING CALLBACKS TRACKER (CRITICAL COMPONENT) -->
+        <div class="card col-12">
+            <h2>
+                <span>📥 Incoming Asynchronous Callbacks (CPO Lambda &rarr; This Server)</span>
+                <span style="font-size: 12px; color: var(--text-muted); font-weight: normal;">Auto-refreshing every 3s</span>
+            </h2>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Time (UTC)</th>
+                            <th>Command</th>
+                            <th>Result</th>
+                            <th>Status Message</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="callbacks-tbody">
+                        {% for cb in callbacks %}
+                        <tr>
+                            <td>{{ cb.received_at|date:"H:i:s (d M)" }}</td>
+                            <td><span class="badge badge-info">{{ cb.command_type }}</span></td>
+                            <td>
+                                {% if cb.result == "ACCEPTED" %}
+                                <span class="badge badge-success">{{ cb.result }}</span>
+                                {% elif cb.result == "EVSE_INOPERATIVE" %}
+                                <span class="badge badge-warning">{{ cb.result }}</span>
+                                {% else %}
+                                <span class="badge badge-danger">{{ cb.result }}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ cb.message }}</td>
+                            <td><button class="btn btn-secondary" style="font-size: 11px; padding: 2px 6px;" onclick='viewPayload({{ cb.payload|safe }})'>JSON</button></td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 20px;">
+                                No callbacks received yet. Dispatched callbacks from CPO Lambda will appear here automatically.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 4. Live Audit Logs & Execution Trace -->
+        <div class="card col-12">
+            <h2>
+                <span>📜 Activity & Audit Log</span>
+                <button class="btn btn-secondary" style="font-size: 11px; padding: 4px 8px;" onclick="clearLogs()">Clear</button>
+            </h2>
+            <pre class="log-box" id="audit-log-box">Initializing log stream...</pre>
+        </div>
+
+    </div>
+
+    <!-- JSON Modal / Viewer Alert -->
+    <script>
+        function viewPayload(data) {
+            alert(JSON.stringify(data, null, 2));
+        }
+
+        async function triggerAction(url) {
+            logMsg(`[CLIENT] Triggering ${url}...`);
+            try {
+                const res = await fetch(url, { method: 'POST' });
+                const json = await res.json();
+                logMsg(`[RESPONSE ${res.status}] ${JSON.stringify(json, null, 2)}`);
+            } catch (err) {
+                logMsg(`[ERROR] ${err.message}`);
+            }
+        }
+
+        async function registerToken() {
+            const uid = prompt("Enter RFID Token UID to register:", "RFID-TEST-001");
+            if (!uid) return;
+            logMsg(`[CLIENT] Registering token ${uid}...`);
+            try {
+                const res = await fetch('/ui/action/register-token', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ token_uid: uid, valid: true })
+                });
+                const json = await res.json();
+                logMsg(`[RESPONSE] ${JSON.stringify(json, null, 2)}`);
+            } catch (err) {
+                logMsg(`[ERROR] ${err.message}`);
+            }
+        }
+
+        async function startSession() {
+            const loc = document.getElementById('cmd-loc-id').value;
+            const evse = document.getElementById('cmd-evse-uid').value;
+            const conn = document.getElementById('cmd-conn-id').value;
+            const token = document.getElementById('cmd-token-uid').value;
+
+            logMsg(`[CLIENT] Dispatching START_SESSION for ${loc} (${evse})...`);
+            try {
+                const res = await fetch('/ui/action/start-session', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ location_id: loc, evse_uid: evse, connector_id: conn, token_uid: token })
+                });
+                const json = await res.json();
+                logMsg(`[RESPONSE] ${JSON.stringify(json, null, 2)}`);
+                pollData();
+            } catch (err) {
+                logMsg(`[ERROR] ${err.message}`);
+            }
+        }
+
+        async function stopSession() {
+            const sid = document.getElementById('cmd-session-id').value;
+            if (!sid) { alert("Please provide Session ID"); return; }
+            logMsg(`[CLIENT] Dispatching STOP_SESSION for ${sid}...`);
+            try {
+                const res = await fetch('/ui/action/stop-session', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ session_id: sid })
+                });
+                const json = await res.json();
+                logMsg(`[RESPONSE] ${JSON.stringify(json, null, 2)}`);
+                pollData();
+            } catch (err) {
+                logMsg(`[ERROR] ${err.message}`);
+            }
+        }
+
+        async function saveConfig() {
+            const payload = {
+                cpo_url: document.getElementById('cfg-cpo-url').value,
+                public_base_url: document.getElementById('cfg-public-url').value,
+                party_id: document.getElementById('cfg-party-id').value,
+                country_code: document.getElementById('cfg-country-code').value,
+                token_a: document.getElementById('cfg-token-a').value,
+                token_b: document.getElementById('cfg-token-b').value,
+                token_c: document.getElementById('cfg-token-c').value
+            };
+            try {
+                const res = await fetch('/ui/action/config', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload)
+                });
+                const json = await res.json();
+                alert(json.message || "Config updated");
+                location.reload();
+            } catch (err) {
+                alert("Failed to save config: " + err.message);
+            }
+        }
+
+        async function clearLogs() {
+            await fetch('/ui/api/clear-logs', { method: 'POST' });
+            document.getElementById('audit-log-box').innerText = "Logs cleared.";
+        }
+
+        function logMsg(msg) {
+            const box = document.getElementById('audit-log-box');
+            box.innerText = `[${new Date().toLocaleTimeString()}] ${msg}\n\n` + box.innerText;
+        }
+
+        // Live Polling for Callbacks & Logs
+        async function pollData() {
+            try {
+                const [cbRes, logRes] = await Promise.all([
+                    fetch('/ui/api/callbacks'),
+                    fetch('/ui/api/logs')
+                ]);
+                const cbData = await cbRes.json();
+                const logData = await logRes.json();
+
+                // Render callbacks table
+                const tbody = document.getElementById('callbacks-tbody');
+                if (cbData.callbacks && cbData.callbacks.length > 0) {
+                    tbody.innerHTML = cbData.callbacks.map(cb => {
+                        let badgeClass = 'badge-info';
+                        if (cb.result === 'ACCEPTED') badgeClass = 'badge-success';
+                        else if (cb.result === 'EVSE_INOPERATIVE') badgeClass = 'badge-warning';
+                        else if (cb.result === 'REJECTED' || cb.result === 'FAILED') badgeClass = 'badge-danger';
+
+                        return `<tr>
+                            <td>${cb.received_at}</td>
+                            <td><span class="badge badge-info">${cb.command_type}</span></td>
+                            <td><span class="badge ${badgeClass}">${cb.result}</span></td>
+                            <td>${cb.message || '-'}</td>
+                            <td><button class="btn btn-secondary" style="font-size: 11px; padding: 2px 6px;" onclick="alert('Command ID: ${cb.command_id}')">Info</button></td>
+                        </tr>`;
+                    }).join('');
+                }
+
+                // Render logs
+                if (logData.logs && logData.logs.length > 0) {
+                    const logLines = logData.logs.map(l => `[${l.timestamp}] ${l.direction} ${l.method} ${l.endpoint} [${l.status_code || '-'}] - ${l.summary}`).join('\n');
+                    document.getElementById('audit-log-box').innerText = logLines;
+                }
+            } catch (e) {
+                console.error("Polling error", e);
+            }
+        }
+
+        setInterval(pollData, 3000);
+        pollData();
+    </script>
+</body>
+</html>
+
