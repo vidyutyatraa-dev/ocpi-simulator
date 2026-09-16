@@ -39,15 +39,16 @@
         .header h1 { font-size: 22px; font-weight: 700; color: #fff; }
         .badge {
             display: inline-block;
-            padding: 4px 10px;
+            padding: 3px 8px;
             border-radius: 9999px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
         }
         .badge-success { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
         .badge-danger { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
         .badge-warning { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
         .badge-info { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); }
+        .badge-purple { background: rgba(168, 85, 247, 0.2); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.4); }
 
         .banner {
             background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(16, 185, 129, 0.15));
@@ -149,16 +150,57 @@
         }
         tr:hover td { background: rgba(255,255,255,0.02); }
 
-        pre.log-box {
+        /* Expandable JSON Audit Log Styles */
+        .log-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 480px;
+            overflow-y: auto;
             background: var(--code-bg);
             border: 1px solid var(--card-border);
             border-radius: 8px;
-            padding: 12px;
-            color: #cbd5e1;
+            padding: 10px;
+        }
+        .log-entry {
+            background: #0d1322;
+            border: 1px solid #1e293b;
+            border-radius: 6px;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+        .log-entry:hover {
+            border-color: #38bdf8;
+        }
+        .log-entry summary {
+            list-style: none;
+            cursor: pointer;
+            padding: 8px 12px;
             font-family: 'JetBrains Mono', monospace;
             font-size: 12px;
-            max-height: 240px;
-            overflow-y: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.02);
+            user-select: none;
+        }
+        .log-entry summary::-webkit-details-marker {
+            display: none;
+        }
+        .log-entry[open] summary {
+            border-bottom: 1px solid #1e293b;
+            background: rgba(59, 130, 246, 0.08);
+        }
+        .log-entry pre {
+            margin: 0;
+            padding: 10px 14px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: #7dd3fc;
+            background: #060911;
+            overflow-x: auto;
+            max-height: 280px;
+            line-height: 1.4;
         }
         .flex-row { display: flex; gap: 8px; }
     </style>
@@ -168,8 +210,8 @@
     <!-- Header -->
     <div class="header">
         <div>
-            <h1>⚡ VidyutYatraa OCPI 2.2.1 EMSP Simulator (Django)</h1>
-            <p style="font-size: 13px; color: var(--text-muted);">Self-Hosted EV Roaming Simulator & Command Callback Receiver</p>
+            <h1>⚡ VidyutYatraa OCPI 2.2.1 EMSP Simulator</h1>
+            <p style="font-size: 13px; color: var(--text-muted);">Self-Hosted EV Roaming Simulator, Sessions & CDRs Inspector</p>
         </div>
         <div>
             <span class="badge badge-success">● System Operational</span>
@@ -179,13 +221,13 @@
     <!-- Active Callback Address Banner -->
     <div class="banner">
         <div>
-            <div class="banner-label">Public Callback Base URL (Announced to CPO)</div>
+            <div class="banner-label">Public EMSP Base URL (Announced to CPO)</div>
             <div class="banner-url" id="live-base-url">{{ detected_public_url }}</div>
         </div>
         <div style="text-align: right;">
-            <div class="banner-label">Assigned Response URL</div>
+            <div class="banner-label">Receiver Endpoints Active</div>
             <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #a7f3d0;">
-                {{ detected_public_url }}/ocpi/emsp/2.2.1/commands/callback
+                /sessions, /cdrs, /commands/callback
             </div>
         </div>
     </div>
@@ -202,7 +244,7 @@
             </div>
             <div class="form-group">
                 <label>Public Base URL (Override if behind NAT/Tunnel)</label>
-                <input type="text" id="cfg-public-url" value="{{ config.public_base_url }}" placeholder="e.g. http://13.232.241.179:8000">
+                <input type="text" id="cfg-public-url" value="{{ config.public_base_url }}" placeholder="e.g. http://13.127.140.240:8000">
             </div>
             <div class="flex-row">
                 <div class="form-group" style="flex: 1;">
@@ -231,11 +273,13 @@
         <!-- 2. Actions & Discovery -->
         <div class="card col-8">
             <h2>🚀 CPO Roaming Actions</h2>
-            <div class="flex-row" style="margin-bottom: 16px; flex-wrap: wrap;">
+            <div class="flex-row" style="margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
                 <button class="btn btn-success" onclick="triggerAction('/ui/action/handshake')">🤝 Credentials Handshake</button>
                 <button class="btn" onclick="triggerAction('/ui/action/locations')">📍 Fetch Locations</button>
                 <button class="btn" onclick="triggerAction('/ui/action/tariffs')">💰 Fetch Tariffs</button>
-                <button class="btn btn-secondary" onclick="registerToken()">💳 Register Test RFID Token</button>
+                <button class="btn btn-secondary" onclick="registerToken()">💳 Register RFID Token</button>
+                <button class="btn" style="background: #0284c7;" onclick="fetchSessions()">⚡ Get Sessions</button>
+                <button class="btn" style="background: #7c3aed;" onclick="fetchCDRs()">🧾 Get CDRs</button>
             </div>
 
             <div class="grid" style="margin-top: 10px;">
@@ -270,50 +314,59 @@
                         <label>Session ID / Transaction ID</label>
                         <input type="text" id="cmd-session-id" placeholder="Paste session UUID or transaction ID">
                     </div>
-                    <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">CPO resolves session via <code>sessionId-index</code> or numeric transaction ID.</p>
+                    <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">Select an active session from below or paste a session ID.</p>
                     <button class="btn btn-danger" onclick="stopSession()" style="width: 100%; margin-top: 24px;">Send STOP_SESSION</button>
                 </div>
             </div>
         </div>
 
-        <!-- 3. INCOMING CALLBACKS TRACKER (CRITICAL COMPONENT) -->
+        <!-- 3. LIVE CHARGING SESSIONS TABLE -->
         <div class="card col-12">
             <h2>
-                <span>📥 Incoming Asynchronous Callbacks (CPO Lambda &rarr; This Server)</span>
-                <span style="font-size: 12px; color: var(--text-muted); font-weight: normal;">Auto-refreshing every 3s</span>
+                <span>⚡ Active & Historical Charging Sessions (Pushed by CPO / Fetched via GET)</span>
+                <div class="flex-row">
+                    <button class="btn btn-secondary" style="font-size: 11px; padding: 4px 8px;" onclick="fetchSessions()">Get Sessions</button>
+                </div>
             </h2>
             <div class="table-wrap">
                 <table>
                     <thead>
                         <tr>
-                            <th>Time (UTC)</th>
-                            <th>Command</th>
-                            <th>Result</th>
-                            <th>Status Message</th>
+                            <th>Session ID</th>
+                            <th>Status</th>
+                            <th>Energy (kWh)</th>
+                            <th>Cost</th>
+                            <th>Last Updated</th>
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody id="callbacks-tbody">
-                        {% for cb in callbacks %}
+                    <tbody id="sessions-tbody">
+                        {% for s in sessions %}
                         <tr>
-                            <td>{{ cb.received_at|date:"H:i:s (d M)" }}</td>
-                            <td><span class="badge badge-info">{{ cb.command_type }}</span></td>
+                            <td><code>{{ s.session_id }}</code></td>
                             <td>
-                                {% if cb.result == "ACCEPTED" %}
-                                <span class="badge badge-success">{{ cb.result }}</span>
-                                {% elif cb.result == "EVSE_INOPERATIVE" %}
-                                <span class="badge badge-warning">{{ cb.result }}</span>
+                                {% if s.status == "ACTIVE" %}
+                                <span class="badge badge-success">{{ s.status }}</span>
+                                {% elif s.status == "COMPLETED" %}
+                                <span class="badge badge-info">{{ s.status }}</span>
                                 {% else %}
-                                <span class="badge badge-danger">{{ cb.result }}</span>
+                                <span class="badge badge-warning">{{ s.status }}</span>
                                 {% endif %}
                             </td>
-                            <td>{{ cb.message }}</td>
-                            <td><button class="btn btn-secondary" style="font-size: 11px; padding: 2px 6px;" onclick='viewPayload({{ cb.payload|safe }})'>JSON</button></td>
+                            <td>{{ s.kwh }}</td>
+                            <td>₹{{ s.total_cost }} {{ s.currency }}</td>
+                            <td>{{ s.updated_at|date:"H:i:s (d M)" }}</td>
+                            <td>
+                                {% if s.status == "ACTIVE" %}
+                                <button class="btn btn-danger" style="font-size: 11px; padding: 2px 6px;" onclick="useSessionForStop('{{ s.session_id }}')">Select for Stop</button>
+                                {% endif %}
+                                <button class="btn btn-secondary" style="font-size: 11px; padding: 2px 6px;" onclick='viewPayload({{ s.raw_data|safe }})'>JSON</button>
+                            </td>
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 20px;">
-                                No callbacks received yet. Dispatched callbacks from CPO Lambda will appear here automatically.
+                            <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 20px;">
+                                No sessions recorded yet. Pushed sessions from CPO or fetched sessions will appear here.
                             </td>
                         </tr>
                         {% endfor %}
@@ -322,13 +375,61 @@
             </div>
         </div>
 
-        <!-- 4. Live Audit Logs & Execution Trace -->
+        <!-- 4. CHARGE DETAIL RECORDS (CDRs) TABLE -->
         <div class="card col-12">
             <h2>
-                <span>📜 Activity & Audit Log</span>
-                <button class="btn btn-secondary" style="font-size: 11px; padding: 4px 8px;" onclick="clearLogs()">Clear</button>
+                <span>🧾 Charge Detail Records (CDRs)</span>
+                <div class="flex-row">
+                    <button class="btn btn-secondary" style="font-size: 11px; padding: 4px 8px;" onclick="fetchCDRs()">Get CDRs</button>
+                </div>
             </h2>
-            <pre class="log-box" id="audit-log-box">Initializing log stream...</pre>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>CDR ID</th>
+                            <th>Session Reference</th>
+                            <th>Total Energy</th>
+                            <th>Total Cost</th>
+                            <th>Created (UTC)</th>
+                            <th>Payload</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cdrs-tbody">
+                        {% for c in cdrs %}
+                        <tr>
+                            <td><code>{{ c.cdr_id }}</code></td>
+                            <td><code>{{ c.session_id|default:"-" }}</code></td>
+                            <td><strong style="color: #34d399;">{{ c.total_energy }} kWh</strong></td>
+                            <td>₹{{ c.total_cost }} {{ c.currency }}</td>
+                            <td>{{ c.created_at|date:"H:i:s (d M)" }}</td>
+                            <td><button class="btn btn-secondary" style="font-size: 11px; padding: 2px 6px;" onclick='viewPayload({{ c.raw_data|safe }})'>JSON</button></td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 20px;">
+                                No CDRs recorded yet. Finalized billing CDRs pushed by CPO or fetched from CPO will appear here.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 5. Live Activity & Audit Log (Interactive Expandable JSON Inspector) -->
+        <div class="card col-12">
+            <h2>
+                <span>📜 Activity & Audit Log (Interactive Expandable JSON Inspector)</span>
+                <div class="flex-row">
+                    <button class="btn btn-secondary" style="font-size: 11px; padding: 4px 8px;" onclick="toggleAllLogs(true)">Expand All</button>
+                    <button class="btn btn-secondary" style="font-size: 11px; padding: 4px 8px;" onclick="toggleAllLogs(false)">Collapse All</button>
+                    <button class="btn btn-secondary" style="font-size: 11px; padding: 4px 8px;" onclick="clearLogs()">Clear</button>
+                </div>
+            </h2>
+            <div class="log-container" id="audit-log-container">
+                <div style="color: var(--text-muted); font-size: 12px; padding: 12px; text-align: center;">Waiting for OCPI traffic...</div>
+            </div>
         </div>
 
     </div>
@@ -339,12 +440,23 @@
             alert(JSON.stringify(data, null, 2));
         }
 
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
         async function triggerAction(url) {
             logMsg(`[CLIENT] Triggering ${url}...`);
             try {
                 const res = await fetch(url, { method: 'POST' });
                 const json = await res.json();
                 logMsg(`[RESPONSE ${res.status}] ${JSON.stringify(json, null, 2)}`);
+                pollData();
             } catch (err) {
                 logMsg(`[ERROR] ${err.message}`);
             }
@@ -362,6 +474,35 @@
                 });
                 const json = await res.json();
                 logMsg(`[RESPONSE] ${JSON.stringify(json, null, 2)}`);
+                pollData();
+            } catch (err) {
+                logMsg(`[ERROR] ${err.message}`);
+            }
+        }
+
+        async function fetchSessions() {
+            const sid = prompt("Enter Session ID to fetch (or leave blank to fetch all sessions from CPO):", "");
+            const url = (sid && sid.trim()) ? `/ui/action/sessions?session_id=${encodeURIComponent(sid.trim())}` : '/ui/action/sessions';
+            logMsg(`[CLIENT] Requesting GET Sessions from CPO (${url})...`);
+            try {
+                const res = await fetch(url);
+                const json = await res.json();
+                logMsg(`[RESPONSE ${res.status}] ${JSON.stringify(json, null, 2)}`);
+                pollData();
+            } catch (err) {
+                logMsg(`[ERROR] ${err.message}`);
+            }
+        }
+
+        async function fetchCDRs() {
+            const cid = prompt("Enter CDR ID to fetch (or leave blank to fetch all CDRs from CPO):", "");
+            const url = (cid && cid.trim()) ? `/ui/action/cdrs?cdr_id=${encodeURIComponent(cid.trim())}` : '/ui/action/cdrs';
+            logMsg(`[CLIENT] Requesting GET CDRs from CPO (${url})...`);
+            try {
+                const res = await fetch(url);
+                const json = await res.json();
+                logMsg(`[RESPONSE ${res.status}] ${JSON.stringify(json, null, 2)}`);
+                pollData();
             } catch (err) {
                 logMsg(`[ERROR] ${err.message}`);
             }
@@ -432,47 +573,155 @@
 
         async function clearLogs() {
             await fetch('/ui/api/clear-logs', { method: 'POST' });
-            document.getElementById('audit-log-box').innerText = "Logs cleared.";
+            document.getElementById('audit-log-container').innerHTML = '<div style="color: var(--text-muted); font-size: 12px; padding: 12px; text-align: center;">Logs cleared.</div>';
+        }
+
+        function toggleAllLogs(expand) {
+            document.querySelectorAll('#audit-log-container details').forEach(d => d.open = expand);
         }
 
         function logMsg(msg) {
-            const box = document.getElementById('audit-log-box');
-            box.innerText = `[${new Date().toLocaleTimeString()}] ${msg}\n\n` + box.innerText;
+            const container = document.getElementById('audit-log-container');
+            const placeholder = container.querySelector('div');
+            if (placeholder) placeholder.remove();
+
+            const entry = document.createElement('details');
+            entry.className = 'log-entry';
+            entry.open = false;
+            entry.innerHTML = `
+                <summary>
+                    <span style="display: inline-flex; align-items: center; gap: 8px;">
+                        <span class="badge badge-purple" style="font-size: 10px; padding: 2px 6px;">💻 UI</span>
+                        <span style="color: #94a3b8; font-size: 11px;">[${new Date().toLocaleTimeString()}]</span>
+                        <strong style="color: #c084fc;">EVENT</strong>
+                        <span style="color: #e2e8f0;">UI Action</span>
+                    </span>
+                    <span style="color: #94a3b8; font-size: 11px; display: inline-flex; align-items: center; gap: 6px;">
+                        <span>${escapeHtml(msg.slice(0, 70))}</span>
+                        <span style="color: #38bdf8; font-weight: bold;">[JSON ▼]</span>
+                    </span>
+                </summary>
+                <pre><code>${escapeHtml(msg)}</code></pre>
+            `;
+            container.insertBefore(entry, container.firstChild);
         }
 
-        // Live Polling for Callbacks & Logs
+        function useSessionForStop(sessionId) {
+            const input = document.getElementById('cmd-session-id');
+            if (input) {
+                input.value = sessionId;
+                input.focus();
+                logMsg(`[UI] Selected session ${sessionId} for STOP_SESSION command.`);
+            }
+        }
+
+        function renderLogs(logs) {
+            const container = document.getElementById('audit-log-container');
+            if (!logs || logs.length === 0) return;
+
+            // Maintain which items were opened by user
+            const openIds = new Set();
+            document.querySelectorAll('#audit-log-container details[open]').forEach(d => {
+                if (d.id) openIds.add(d.id);
+            });
+
+            container.innerHTML = logs.map(l => {
+                const dirBadge = l.direction === 'IN' 
+                    ? '<span class="badge badge-info" style="font-size: 10px; padding: 2px 6px;">📥 IN</span>'
+                    : '<span class="badge badge-success" style="font-size: 10px; padding: 2px 6px;">📤 OUT</span>';
+
+                let statusBadge = '<span class="badge" style="background:#334155; color:#cbd5e1; font-size: 10px; padding: 2px 6px;">-</span>';
+                if (l.status_code) {
+                    if (l.status_code >= 200 && l.status_code < 300) {
+                        statusBadge = `<span class="badge badge-success" style="font-size: 10px; padding: 2px 6px;">${l.status_code}</span>`;
+                    } else if (l.status_code >= 400) {
+                        statusBadge = `<span class="badge badge-danger" style="font-size: 10px; padding: 2px 6px;">${l.status_code}</span>`;
+                    } else {
+                        statusBadge = `<span class="badge badge-warning" style="font-size: 10px; padding: 2px 6px;">${l.status_code}</span>`;
+                    }
+                }
+
+                const jsonStr = (l.details && Object.keys(l.details).length > 0)
+                    ? JSON.stringify(l.details, null, 2)
+                    : JSON.stringify({ summary: l.summary, endpoint: l.endpoint, method: l.method, status_code: l.status_code }, null, 2);
+
+                const isOpen = openIds.has(`log-item-${l.id}`) ? 'open' : '';
+
+                return `<details class="log-entry" id="log-item-${l.id}" ${isOpen}>
+                    <summary>
+                        <span style="display: inline-flex; align-items: center; gap: 8px;">
+                            ${dirBadge}
+                            <span style="color: #94a3b8; font-size: 11px;">[${l.timestamp}]</span>
+                            <strong style="color: #38bdf8;">${l.method}</strong>
+                            <code style="color: #e2e8f0; font-size: 11px;">${escapeHtml(l.endpoint)}</code>
+                            ${statusBadge}
+                        </span>
+                        <span style="color: #94a3b8; font-size: 11px; display: inline-flex; align-items: center; gap: 6px;">
+                            <span>${escapeHtml(l.summary)}</span>
+                            <span style="color: #38bdf8; font-weight: bold;">[JSON ▼]</span>
+                        </span>
+                    </summary>
+                    <pre><code>${escapeHtml(jsonStr)}</code></pre>
+                </details>`;
+            }).join('');
+        }
+
+        // Live Polling for Sessions, CDRs & Logs
         async function pollData() {
             try {
-                const [cbRes, logRes] = await Promise.all([
-                    fetch('/ui/api/callbacks'),
+                const [sessRes, cdrRes, logRes] = await Promise.all([
+                    fetch('/ui/api/sessions'),
+                    fetch('/ui/api/cdrs'),
                     fetch('/ui/api/logs')
                 ]);
-                const cbData = await cbRes.json();
+                const sessData = await sessRes.json();
+                const cdrData = await cdrRes.json();
                 const logData = await logRes.json();
 
-                // Render callbacks table
-                const tbody = document.getElementById('callbacks-tbody');
-                if (cbData.callbacks && cbData.callbacks.length > 0) {
-                    tbody.innerHTML = cbData.callbacks.map(cb => {
-                        let badgeClass = 'badge-info';
-                        if (cb.result === 'ACCEPTED') badgeClass = 'badge-success';
-                        else if (cb.result === 'EVSE_INOPERATIVE') badgeClass = 'badge-warning';
-                        else if (cb.result === 'REJECTED' || cb.result === 'FAILED') badgeClass = 'badge-danger';
+                // 1. Render sessions table
+                const sessTbody = document.getElementById('sessions-tbody');
+                if (sessData.sessions && sessData.sessions.length > 0) {
+                    sessTbody.innerHTML = sessData.sessions.map(s => {
+                        let badgeClass = 'badge-warning';
+                        if (s.status === 'ACTIVE') badgeClass = 'badge-success';
+                        else if (s.status === 'COMPLETED') badgeClass = 'badge-info';
+
+                        const stopBtn = (s.status === 'ACTIVE')
+                            ? `<button class="btn btn-danger" style="font-size: 11px; padding: 2px 6px; margin-right: 4px;" onclick="useSessionForStop('${s.session_id}')">Select for Stop</button>`
+                            : ``;
 
                         return `<tr>
-                            <td>${cb.received_at}</td>
-                            <td><span class="badge badge-info">${cb.command_type}</span></td>
-                            <td><span class="badge ${badgeClass}">${cb.result}</span></td>
-                            <td>${cb.message || '-'}</td>
-                            <td><button class="btn btn-secondary" style="font-size: 11px; padding: 2px 6px;" onclick="alert('Command ID: ${cb.command_id}')">Info</button></td>
+                            <td><code>${s.session_id}</code></td>
+                            <td><span class="badge ${badgeClass}">${s.status}</span></td>
+                            <td>${s.kwh || 0}</td>
+                            <td>₹${s.total_cost || 0} ${s.currency || 'INR'}</td>
+                            <td>${s.updated_at_fmt || s.updated_at ? s.updated_at.slice(11, 19) : '-'}</td>
+                            <td>
+                                ${stopBtn}
+                                <button class="btn btn-secondary" style="font-size: 11px; padding: 2px 6px;" onclick='viewPayload(${JSON.stringify(s.raw_data || {})})'>JSON</button>
+                            </td>
                         </tr>`;
                     }).join('');
                 }
 
-                // Render logs
-                if (logData.logs && logData.logs.length > 0) {
-                    const logLines = logData.logs.map(l => `[${l.timestamp}] ${l.direction} ${l.method} ${l.endpoint} [${l.status_code || '-'}] - ${l.summary}`).join('\n');
-                    document.getElementById('audit-log-box').innerText = logLines;
+                // 2. Render CDRs table
+                const cdrsTbody = document.getElementById('cdrs-tbody');
+                if (cdrData.cdrs && cdrData.cdrs.length > 0) {
+                    cdrsTbody.innerHTML = cdrData.cdrs.map(c => {
+                        return `<tr>
+                            <td><code>${c.cdr_id}</code></td>
+                            <td><code>${c.session_id || '-'}</code></td>
+                            <td><strong style="color: #34d399;">${c.total_energy} kWh</strong></td>
+                            <td>₹${c.total_cost} ${c.currency || 'INR'}</td>
+                            <td>${c.created_at_fmt || c.created_at ? c.created_at.slice(11, 19) : '-'}</td>
+                            <td><button class="btn btn-secondary" style="font-size: 11px; padding: 2px 6px;" onclick='viewPayload(${JSON.stringify(c.raw_data || {})})'>JSON</button></td>
+                        </tr>`;
+                    }).join('');
+                }
+
+                // 3. Render expandable logs
+                if (logData.logs) {
+                    renderLogs(logData.logs);
                 }
             } catch (e) {
                 console.error("Polling error", e);
@@ -484,4 +733,3 @@
     </script>
 </body>
 </html>
-

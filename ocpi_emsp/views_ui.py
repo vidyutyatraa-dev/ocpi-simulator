@@ -96,6 +96,62 @@ def api_action_stop_session(request: HttpRequest):
     })
 
 @csrf_exempt
+def api_action_get_sessions(request: HttpRequest):
+    """Trigger Get Sessions from CPO: GET /ocpi/cpo/2.2.1/sessions"""
+    session_id = request.GET.get("session_id", "").strip()
+    client = CPOClient(request)
+    result = client.get_sessions(session_id)
+    
+    # Sync retrieved sessions into local ChargingSession table
+    data = result.get("data")
+    items_to_sync = data if isinstance(data, list) else ([data] if isinstance(data, dict) and data else [])
+    for s in items_to_sync:
+        sid = s.get("id") or s.get("session_id")
+        if sid:
+            ChargingSession.objects.update_or_create(
+                session_id=sid,
+                defaults={
+                    "country_code": s.get("country_code", "IN"),
+                    "party_id": s.get("party_id", "VYT"),
+                    "start_date_time": s.get("start_date_time", ""),
+                    "end_date_time": s.get("end_date_time", ""),
+                    "kwh": float(s.get("kwh", 0.0)),
+                    "total_cost": float(s.get("total_cost", {}).get("excl_vat", 0.0) if isinstance(s.get("total_cost"), dict) else (s.get("total_cost") or 0.0)),
+                    "currency": s.get("currency", "INR"),
+                    "status": s.get("status", "ACTIVE"),
+                    "raw_data": s
+                }
+            )
+    return JsonResponse(result)
+
+@csrf_exempt
+def api_action_get_cdrs(request: HttpRequest):
+    """Trigger Get CDRs from CPO: GET /ocpi/cpo/2.2.1/cdrs"""
+    cdr_id = request.GET.get("cdr_id", "").strip()
+    client = CPOClient(request)
+    result = client.get_cdrs(cdr_id)
+    
+    # Sync retrieved CDRs into local ChargeDetailRecord table
+    data = result.get("data")
+    items_to_sync = data if isinstance(data, list) else ([data] if isinstance(data, dict) and data else [])
+    for c in items_to_sync:
+        cid = c.get("id") or c.get("cdr_id")
+        if cid:
+            ChargeDetailRecord.objects.update_or_create(
+                cdr_id=cid,
+                defaults={
+                    "session_id": c.get("session_id", ""),
+                    "start_date_time": c.get("start_date_time", ""),
+                    "end_date_time": c.get("end_date_time", ""),
+                    "total_energy": float(c.get("total_energy", 0.0)),
+                    "total_cost": float(c.get("total_cost", {}).get("excl_vat", 0.0) if isinstance(c.get("total_cost"), dict) else (c.get("total_cost") or 0.0)),
+                    "currency": c.get("currency", "INR"),
+                    "raw_data": c
+                }
+            )
+    return JsonResponse(result)
+
+@csrf_exempt
 def api_action_update_config(request: HttpRequest):
     """Update simulator configuration."""
     try:
@@ -133,13 +189,24 @@ def api_get_callbacks(request: HttpRequest):
     return JsonResponse({"callbacks": items})
 
 def api_get_sessions(request: HttpRequest):
-    """Polling API: Returns active sessions."""
-    items = list(ChargingSession.objects.all().values('session_id', 'status', 'kwh', 'total_cost', 'currency', 'updated_at')[:20])
+    """Polling API: Returns active and historical sessions."""
+    items = list(ChargingSession.objects.all().values('session_id', 'status', 'kwh', 'total_cost', 'currency', 'updated_at', 'raw_data')[:30])
+    for item in items:
+        if item.get('updated_at'):
+            item['updated_at_fmt'] = item['updated_at'].strftime('%H:%M:%S (%d %b)')
     return JsonResponse({"sessions": items})
 
+def api_get_cdrs(request: HttpRequest):
+    """Polling API: Returns recent charge detail records."""
+    items = list(ChargeDetailRecord.objects.all().values('cdr_id', 'session_id', 'total_energy', 'total_cost', 'currency', 'created_at', 'raw_data')[:30])
+    for item in items:
+        if item.get('created_at'):
+            item['created_at_fmt'] = item['created_at'].strftime('%H:%M:%S (%d %b)')
+    return JsonResponse({"cdrs": items})
+
 def api_get_logs(request: HttpRequest):
-    """Polling API: Returns recent audit logs."""
-    items = list(AuditLog.objects.all().values('id', 'direction', 'module', 'endpoint', 'method', 'status_code', 'summary', 'timestamp')[:25])
+    """Polling API: Returns recent audit logs with full JSON details."""
+    items = list(AuditLog.objects.all().values('id', 'direction', 'module', 'endpoint', 'method', 'status_code', 'summary', 'details', 'timestamp')[:35])
     for item in items:
         if item.get('timestamp'):
             item['timestamp'] = item['timestamp'].strftime('%H:%M:%S')
@@ -150,4 +217,5 @@ def api_clear_logs(request: HttpRequest):
     """Clears audit logs."""
     AuditLog.objects.all().delete()
     return JsonResponse({"status": "CLEARED"})
+
 

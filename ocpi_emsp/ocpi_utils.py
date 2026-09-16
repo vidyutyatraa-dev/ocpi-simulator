@@ -211,3 +211,38 @@ class CPOClient:
             log_ocpi_activity('OUT', 'commands', url, 'POST', 0, f'STOP_SESSION failed: {e}')
             return {"error": str(e)}
 
+    def get_sessions(self, session_id: str = "") -> dict:
+        """Fetch sessions from CPO: GET /ocpi/cpo/2.2.1/sessions or GET /ocpi/cpo/2.2.1/sessions/{id}"""
+        url = f"{self.config.cpo_url.rstrip('/')}/ocpi/cpo/2.2.1/sessions"
+        if session_id:
+            url = f"{url}/{session_id.strip()}"
+        try:
+            res = requests.get(url, headers=self.headers, timeout=12)
+            try:
+                res_json = res.json()
+            except Exception:
+                res_json = {"raw": res.text}
+            log_ocpi_activity('OUT', 'sessions', url, 'GET', res.status_code, f'Get Sessions {"(" + session_id + ")" if session_id else ""}', {'response': res_json})
+            return res_json if res.status_code == 200 else {"error": res.text, "status_code": res.status_code}
+        except Exception as e:
+            log_ocpi_activity('OUT', 'sessions', url, 'GET', 0, f'Get Sessions failed: {e}')
+            return {"error": str(e)}
+
+    def get_cdrs(self, cdr_id: str = "") -> dict:
+        """Fetch CDRs from CPO: GET /ocpi/cpo/2.2.1/cdrs or GET /ocpi/cpo/2.2.1/cdrs/{id}"""
+        url = f"{self.config.cpo_url.rstrip('/')}/ocpi/cpo/2.2.1/cdrs"
+        if cdr_id:
+            url = f"{url}/{cdr_id.strip()}"
+        try:
+            res = requests.get(url, headers=self.headers, timeout=12)
+            try:
+                res_json = res.json()
+            except Exception:
+                res_json = {"raw": res.text}
+            log_ocpi_activity('OUT', 'cdrs', url, 'GET', res.status_code, f'Get CDRs {"(" + cdr_id + ")" if cdr_id else ""}', {'response': res_json})
+            return res_json if res.status_code == 200 else {"error": res.text, "status_code": res.status_code}
+        except Exception as e:
+            log_ocpi_activity('OUT', 'cdrs', url, 'GET', 0, f'Get CDRs failed: {e}')
+            return {"error": str(e)}
+
+

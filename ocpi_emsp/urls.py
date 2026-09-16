@@ -10,10 +10,13 @@ urlpatterns = [
     path('ui/action/register-token', views_ui.api_action_put_token, name='ui_register_token'),
     path('ui/action/start-session', views_ui.api_action_start_session, name='ui_start_session'),
     path('ui/action/stop-session', views_ui.api_action_stop_session, name='ui_stop_session'),
+    path('ui/action/sessions', views_ui.api_action_get_sessions, name='ui_get_sessions'),
+    path('ui/action/cdrs', views_ui.api_action_get_cdrs, name='ui_get_cdrs'),
     path('ui/action/config', views_ui.api_action_update_config, name='ui_update_config'),
 
     path('ui/api/callbacks', views_ui.api_get_callbacks, name='api_callbacks'),
     path('ui/api/sessions', views_ui.api_get_sessions, name='api_sessions'),
+    path('ui/api/cdrs', views_ui.api_get_cdrs, name='api_cdrs'),
     path('ui/api/logs', views_ui.api_get_logs, name='api_logs'),
     path('ui/api/clear-logs', views_ui.api_clear_logs, name='api_clear_logs'),
 
