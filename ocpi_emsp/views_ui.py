@@ -98,7 +98,14 @@ def api_action_stop_session(request: HttpRequest):
 @csrf_exempt
 def api_action_get_sessions(request: HttpRequest):
     """Trigger Get Sessions from CPO: GET /ocpi/cpo/2.2.1/sessions"""
-    session_id = request.GET.get("session_id", "").strip()
+    session_id = request.GET.get("session_id") or request.POST.get("session_id") or ""
+    if not session_id and request.body:
+        try:
+            body = json.loads(request.body)
+            session_id = body.get("session_id", "")
+        except Exception:
+            pass
+    session_id = str(session_id).strip()
     client = CPOClient(request)
     result = client.get_sessions(session_id)
     
@@ -127,7 +134,14 @@ def api_action_get_sessions(request: HttpRequest):
 @csrf_exempt
 def api_action_get_cdrs(request: HttpRequest):
     """Trigger Get CDRs from CPO: GET /ocpi/cpo/2.2.1/cdrs"""
-    cdr_id = request.GET.get("cdr_id", "").strip()
+    cdr_id = request.GET.get("cdr_id") or request.POST.get("cdr_id") or ""
+    if not cdr_id and request.body:
+        try:
+            body = json.loads(request.body)
+            cdr_id = body.get("cdr_id", "")
+        except Exception:
+            pass
+    cdr_id = str(cdr_id).strip()
     client = CPOClient(request)
     result = client.get_cdrs(cdr_id)
     

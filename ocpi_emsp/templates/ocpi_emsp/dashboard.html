@@ -8,9 +8,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --card-border: #334155;
+            --bg-color: #0b1120;
+            --card-bg: #151f32;
+            --card-border: #23334d;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --primary: #3b82f6;
@@ -18,7 +18,7 @@
             --success: #10b981;
             --danger: #ef4444;
             --warning: #f59e0b;
-            --code-bg: #090d16;
+            --code-bg: #070c18;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -73,25 +73,78 @@
         .col-6 { grid-column: span 6; }
         .col-12 { grid-column: span 12; }
 
+        /* Card & Collapsible Header */
         .card {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
             border-radius: 12px;
-            padding: 20px;
+            padding: 18px 20px;
+            transition: all 0.2s ease-in-out;
         }
-        .card h2 {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 16px;
+        .card-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            cursor: pointer;
+            user-select: none;
+            padding-bottom: 12px;
+            margin-bottom: 14px;
+            border-bottom: 1px solid var(--card-border);
         }
+        .card-header:hover {
+            opacity: 0.95;
+        }
+        .card.collapsed {
+            padding-bottom: 18px;
+        }
+        .card.collapsed .card-header {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        .card.collapsed .card-body {
+            display: none !important;
+        }
+        .card-title {
+            font-size: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #fff;
+        }
+        .card-actions-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .collapse-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--card-border);
+            color: var(--text-muted);
+            border-radius: 6px;
+            width: 26px;
+            height: 26px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 10px;
+            transition: transform 0.2s ease, background 0.2s;
+        }
+        .collapse-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+        }
+        .card.collapsed .collapse-btn {
+            transform: rotate(-90deg);
+        }
+
         .form-group { margin-bottom: 12px; }
         label { display: block; font-size: 12px; font-weight: 500; color: var(--text-muted); margin-bottom: 4px; }
         input[type="text"], input[type="number"], select {
             width: 100%;
-            background: #090d16;
+            background: #080e1a;
             border: 1px solid var(--card-border);
             color: #fff;
             padding: 8px 12px;
@@ -121,8 +174,8 @@
         .btn-success:hover { background: #047857; }
         .btn-danger { background: #dc2626; }
         .btn-danger:hover { background: #b91c1c; }
-        .btn-secondary { background: #334155; color: #e2e8f0; }
-        .btn-secondary:hover { background: #475569; }
+        .btn-secondary { background: #23334d; color: #e2e8f0; }
+        .btn-secondary:hover { background: #334666; }
 
         .table-wrap {
             overflow-x: auto;
@@ -136,7 +189,7 @@
             text-align: left;
         }
         th {
-            background: #090d16;
+            background: #080e1a;
             color: var(--text-muted);
             font-weight: 600;
             padding: 8px 12px;
@@ -146,7 +199,7 @@
         }
         td {
             padding: 8px 12px;
-            border-bottom: 1px solid #1e293b;
+            border-bottom: 1px solid #1a273e;
         }
         tr:hover td { background: rgba(255,255,255,0.02); }
 
@@ -163,8 +216,8 @@
             padding: 10px;
         }
         .log-entry {
-            background: #0d1322;
-            border: 1px solid #1e293b;
+            background: #0c1424;
+            border: 1px solid #1c2b44;
             border-radius: 6px;
             overflow: hidden;
             transition: border-color 0.2s;
@@ -188,7 +241,7 @@
             display: none;
         }
         .log-entry[open] summary {
-            border-bottom: 1px solid #1e293b;
+            border-bottom: 1px solid #1c2b44;
             background: rgba(59, 130, 246, 0.08);
         }
         .log-entry pre {
@@ -197,7 +250,7 @@
             font-family: 'JetBrains Mono', monospace;
             font-size: 11px;
             color: #7dd3fc;
-            background: #060911;
+            background: #050912;
             overflow-x: auto;
             max-height: 280px;
             line-height: 1.4;
@@ -235,200 +288,278 @@
     <!-- Main Grid -->
     <div class="grid">
 
-        <!-- 1. Configuration & Identity -->
-        <div class="card col-4">
-            <h2>⚙️ Partner Configuration <button class="btn btn-secondary" onclick="saveConfig()" style="font-size: 11px; padding: 4px 8px;">Save</button></h2>
-            <div class="form-group">
-                <label>CPO API Base URL</label>
-                <input type="text" id="cfg-cpo-url" value="{{ config.cpo_url }}">
-            </div>
-            <div class="form-group">
-                <label>Public Base URL (Override if behind NAT/Tunnel)</label>
-                <input type="text" id="cfg-public-url" value="{{ config.public_base_url }}" placeholder="e.g. http://13.127.140.240:8000">
-            </div>
-            <div class="flex-row">
-                <div class="form-group" style="flex: 1;">
-                    <label>Party ID</label>
-                    <input type="text" id="cfg-party-id" value="{{ config.party_id }}">
-                </div>
-                <div class="form-group" style="flex: 1;">
-                    <label>Country Code</label>
-                    <input type="text" id="cfg-country-code" value="{{ config.country_code }}">
+        <!-- 1. Configuration & Identity (Collapsible) -->
+        <div class="card col-4" id="card-config">
+            <div class="card-header" onclick="toggleCard('card-config')">
+                <span class="card-title">⚙️ Partner Configuration</span>
+                <div class="card-actions-header" onclick="event.stopPropagation()">
+                    <button class="btn btn-secondary" onclick="saveConfig()" style="font-size: 11px; padding: 4px 8px;">Save</button>
+                    <button class="collapse-btn" onclick="toggleCard('card-config'); event.stopPropagation();">▼</button>
                 </div>
             </div>
-            <div class="form-group">
-                <label>Token A (Bootstrap Token for Initial Handshake)</label>
-                <input type="text" id="cfg-token-a" value="{{ config.token_a }}" placeholder="Pre-shared token provided by CPO">
-            </div>
-            <div class="form-group">
-                <label>Token B (Permanent Token to Call CPO)</label>
-                <input type="text" id="cfg-token-b" value="{{ config.token_b }}">
-            </div>
-            <div class="form-group">
-                <label>Token C (Secret for CPO to Call Back)</label>
-                <input type="text" id="cfg-token-c" value="{{ config.token_c }}">
+            <div class="card-body">
+                <div class="form-group">
+                    <label>CPO API Base URL</label>
+                    <input type="text" id="cfg-cpo-url" value="{{ config.cpo_url }}">
+                </div>
+                <div class="form-group">
+                    <label>Public Base URL (Override if behind NAT/Tunnel)</label>
+                    <input type="text" id="cfg-public-url" value="{{ config.public_base_url }}" placeholder="e.g. http://13.127.140.240:8000">
+                </div>
+                <div class="flex-row">
+                    <div class="form-group" style="flex: 1;">
+                        <label>Party ID</label>
+                        <input type="text" id="cfg-party-id" value="{{ config.party_id }}">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label>Country Code</label>
+                        <input type="text" id="cfg-country-code" value="{{ config.country_code }}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Token A (Bootstrap Token for Initial Handshake)</label>
+                    <input type="text" id="cfg-token-a" value="{{ config.token_a }}" placeholder="Pre-shared token provided by CPO">
+                </div>
+                <div class="form-group">
+                    <label>Token B (Permanent Token to Call CPO)</label>
+                    <input type="text" id="cfg-token-b" value="{{ config.token_b }}">
+                </div>
+                <div class="form-group">
+                    <label>Token C (Secret for CPO to Call Back)</label>
+                    <input type="text" id="cfg-token-c" value="{{ config.token_c }}">
+                </div>
             </div>
         </div>
 
-        <!-- 2. Actions & Discovery -->
-        <div class="card col-8">
-            <h2>🚀 CPO Roaming Actions</h2>
-            <div class="flex-row" style="margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
-                <button class="btn btn-success" onclick="triggerAction('/ui/action/handshake')">🤝 Credentials Handshake</button>
-                <button class="btn" onclick="triggerAction('/ui/action/locations')">📍 Fetch Locations</button>
-                <button class="btn" onclick="triggerAction('/ui/action/tariffs')">💰 Fetch Tariffs</button>
-                <button class="btn btn-secondary" onclick="registerToken()">💳 Register RFID Token</button>
-                <button class="btn" style="background: #0284c7;" onclick="fetchSessions()">⚡ Get Sessions</button>
-                <button class="btn" style="background: #7c3aed;" onclick="fetchCDRs()">🧾 Get CDRs</button>
+        <!-- 2. Actions & Discovery (Collapsible) -->
+        <div class="card col-8" id="card-actions">
+            <div class="card-header" onclick="toggleCard('card-actions')">
+                <span class="card-title">🚀 CPO Commands & Actions</span>
+                <div class="card-actions-header" onclick="event.stopPropagation()">
+                    <button class="collapse-btn" onclick="toggleCard('card-actions'); event.stopPropagation();">▼</button>
+                </div>
             </div>
+            <div class="card-body">
+                <div class="flex-row" style="margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+                    <button class="btn btn-success" onclick="triggerAction('/ui/action/handshake')">🤝 Credentials Handshake</button>
+                    <button class="btn" onclick="triggerAction('/ui/action/locations')">📍 Fetch Locations</button>
+                    <button class="btn" onclick="triggerAction('/ui/action/tariffs')">💰 Fetch Tariffs</button>
+                    <button class="btn btn-secondary" onclick="registerToken()">💳 Register RFID Token</button>
+                </div>
 
-            <div class="grid" style="margin-top: 10px;">
-                <!-- START SESSION -->
-                <div class="col-6" style="background: #090d16; padding: 12px; border-radius: 8px; border: 1px solid var(--card-border);">
-                    <h3 style="font-size: 14px; margin-bottom: 8px; color: #34d399;">▶️ START_SESSION Command</h3>
-                    <div class="form-group">
-                        <label>Location ID</label>
-                        <input type="text" id="cmd-loc-id" value="VYKA001">
-                    </div>
-                    <div class="form-group">
-                        <label>EVSE UID</label>
-                        <input type="text" id="cmd-evse-uid" value="IN*VYT*EVYKA001">
-                    </div>
-                    <div class="flex-row">
-                        <div class="form-group" style="flex: 1;">
-                            <label>Connector ID</label>
-                            <input type="number" id="cmd-conn-id" value="1">
+                <div class="grid" style="margin-top: 10px;">
+                    <!-- START SESSION -->
+                    <div class="col-6" style="background: #080e1a; padding: 12px; border-radius: 8px; border: 1px solid var(--card-border);">
+                        <h3 style="font-size: 14px; margin-bottom: 8px; color: #34d399;">▶️ START_SESSION Command</h3>
+                        <div class="form-group">
+                            <label>Location ID</label>
+                            <input type="text" id="cmd-loc-id" value="VYKA001">
                         </div>
-                        <div class="form-group" style="flex: 2;">
-                            <label>Token UID</label>
-                            <input type="text" id="cmd-token-uid" value="RFID-TEST-001">
+                        <div class="form-group">
+                            <label>EVSE UID</label>
+                            <input type="text" id="cmd-evse-uid" value="IN*VYT*EVYKA001">
                         </div>
+                        <div class="flex-row">
+                            <div class="form-group" style="flex: 1;">
+                                <label>Connector ID</label>
+                                <input type="number" id="cmd-conn-id" value="1">
+                            </div>
+                            <div class="form-group" style="flex: 2;">
+                                <label>Token UID</label>
+                                <input type="text" id="cmd-token-uid" value="RFID-TEST-001">
+                            </div>
+                        </div>
+                        <button class="btn btn-success" onclick="startSession()" style="width: 100%; margin-top: 4px;">Send START_SESSION</button>
                     </div>
-                    <button class="btn btn-success" onclick="startSession()" style="width: 100%; margin-top: 4px;">Send START_SESSION</button>
-                </div>
 
-                <!-- STOP SESSION -->
-                <div class="col-6" style="background: #090d16; padding: 12px; border-radius: 8px; border: 1px solid var(--card-border);">
-                    <h3 style="font-size: 14px; margin-bottom: 8px; color: #f87171;">⏹️ STOP_SESSION Command</h3>
-                    <div class="form-group">
-                        <label>Session ID / Transaction ID</label>
-                        <input type="text" id="cmd-session-id" placeholder="Paste session UUID or transaction ID">
+                    <!-- STOP SESSION -->
+                    <div class="col-6" style="background: #080e1a; padding: 12px; border-radius: 8px; border: 1px solid var(--card-border);">
+                        <h3 style="font-size: 14px; margin-bottom: 8px; color: #f87171;">⏹️ STOP_SESSION Command</h3>
+                        <div class="form-group">
+                            <label>Session ID / Transaction ID</label>
+                            <input type="text" id="cmd-session-id" placeholder="Paste session UUID or transaction ID">
+                        </div>
+                        <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">Select an active session from below or paste a session ID.</p>
+                        <button class="btn btn-danger" onclick="stopSession()" style="width: 100%; margin-top: 24px;">Send STOP_SESSION</button>
                     </div>
-                    <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">Select an active session from below or paste a session ID.</p>
-                    <button class="btn btn-danger" onclick="stopSession()" style="width: 100%; margin-top: 24px;">Send STOP_SESSION</button>
                 </div>
             </div>
         </div>
 
-        <!-- 3. LIVE CHARGING SESSIONS TABLE -->
-        <div class="card col-12">
-            <h2>
-                <span>⚡ Active & Historical Charging Sessions (Pushed by CPO / Fetched via GET)</span>
-                <div class="flex-row">
-                    <button class="btn btn-secondary" style="font-size: 11px; padding: 4px 8px;" onclick="fetchSessions()">Get Sessions</button>
+        <!-- 3. DEDICATED GET SESSIONS SECTION (Collapsible) -->
+        <div class="card col-12" id="card-get-sessions">
+            <div class="card-header" onclick="toggleCard('card-get-sessions')">
+                <span class="card-title">⚡ Query CPO Sessions (GET /ocpi/cpo/2.2.1/sessions)</span>
+                <div class="card-actions-header" onclick="event.stopPropagation()">
+                    <button class="collapse-btn" onclick="toggleCard('card-get-sessions'); event.stopPropagation();">▼</button>
                 </div>
-            </h2>
-            <div class="table-wrap">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Session ID</th>
-                            <th>Status</th>
-                            <th>Energy (kWh)</th>
-                            <th>Cost</th>
-                            <th>Last Updated</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="sessions-tbody">
-                        {% for s in sessions %}
-                        <tr>
-                            <td><code>{{ s.session_id }}</code></td>
-                            <td>
-                                {% if s.status == "ACTIVE" %}
-                                <span class="badge badge-success">{{ s.status }}</span>
-                                {% elif s.status == "COMPLETED" %}
-                                <span class="badge badge-info">{{ s.status }}</span>
-                                {% else %}
-                                <span class="badge badge-warning">{{ s.status }}</span>
-                                {% endif %}
-                            </td>
-                            <td>{{ s.kwh }}</td>
-                            <td>₹{{ s.total_cost }} {{ s.currency }}</td>
-                            <td>{{ s.updated_at|date:"H:i:s (d M)" }}</td>
-                            <td>
-                                {% if s.status == "ACTIVE" %}
-                                <button class="btn btn-danger" style="font-size: 11px; padding: 2px 6px;" onclick="useSessionForStop('{{ s.session_id }}')">Select for Stop</button>
-                                {% endif %}
-                                <button class="btn btn-secondary" style="font-size: 11px; padding: 2px 6px;" onclick='viewPayload({{ s.raw_data|safe }})'>JSON</button>
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 20px;">
-                                No sessions recorded yet. Pushed sessions from CPO or fetched sessions will appear here.
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+            </div>
+            <div class="card-body">
+                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">
+                    Fetch real-time charging sessions directly from CPO using standard OCPI <code>GET /sessions</code>.
+                    Enter a specific Session ID to retrieve a single session, or <strong>leave blank to pull all active & historical sessions</strong>.
+                </p>
+                <div class="flex-row" style="align-items: flex-end; gap: 12px; max-width: 800px;">
+                    <div class="form-group" style="flex: 3; margin-bottom: 0;">
+                        <label>Session ID (Leave blank to pull all sessions)</label>
+                        <input type="text" id="query-session-id" placeholder="e.g. 7a139be9-8278-4457-b5da-3c599833dbf6 or leave blank">
+                    </div>
+                    <button class="btn" onclick="querySessionsInput()" style="flex: 1; height: 38px; white-space: nowrap; background: #0284c7;">
+                        ⚡ Fetch Sessions
+                    </button>
+                    <button class="btn btn-secondary" onclick="document.getElementById('query-session-id').value=''; querySessionsInput();" style="height: 38px; white-space: nowrap;">
+                        Pull All
+                    </button>
+                </div>
             </div>
         </div>
 
-        <!-- 4. CHARGE DETAIL RECORDS (CDRs) TABLE -->
-        <div class="card col-12">
-            <h2>
-                <span>🧾 Charge Detail Records (CDRs)</span>
-                <div class="flex-row">
-                    <button class="btn btn-secondary" style="font-size: 11px; padding: 4px 8px;" onclick="fetchCDRs()">Get CDRs</button>
+        <!-- 4. DEDICATED GET CDRs SECTION (Collapsible) -->
+        <div class="card col-12" id="card-get-cdrs">
+            <div class="card-header" onclick="toggleCard('card-get-cdrs')">
+                <span class="card-title">🧾 Query CPO CDRs (GET /ocpi/cpo/2.2.1/cdrs)</span>
+                <div class="card-actions-header" onclick="event.stopPropagation()">
+                    <button class="collapse-btn" onclick="toggleCard('card-get-cdrs'); event.stopPropagation();">▼</button>
                 </div>
-            </h2>
-            <div class="table-wrap">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>CDR ID</th>
-                            <th>Session Reference</th>
-                            <th>Total Energy</th>
-                            <th>Total Cost</th>
-                            <th>Created (UTC)</th>
-                            <th>Payload</th>
-                        </tr>
-                    </thead>
-                    <tbody id="cdrs-tbody">
-                        {% for c in cdrs %}
-                        <tr>
-                            <td><code>{{ c.cdr_id }}</code></td>
-                            <td><code>{{ c.session_id|default:"-" }}</code></td>
-                            <td><strong style="color: #34d399;">{{ c.total_energy }} kWh</strong></td>
-                            <td>₹{{ c.total_cost }} {{ c.currency }}</td>
-                            <td>{{ c.created_at|date:"H:i:s (d M)" }}</td>
-                            <td><button class="btn btn-secondary" style="font-size: 11px; padding: 2px 6px;" onclick='viewPayload({{ c.raw_data|safe }})'>JSON</button></td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 20px;">
-                                No CDRs recorded yet. Finalized billing CDRs pushed by CPO or fetched from CPO will appear here.
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+            </div>
+            <div class="card-body">
+                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">
+                    Fetch finalized billing Charge Detail Records directly from CPO using standard OCPI <code>GET /cdrs</code>.
+                    Enter a specific CDR ID, or <strong>leave blank to pull all CDRs</strong>.
+                </p>
+                <div class="flex-row" style="align-items: flex-end; gap: 12px; max-width: 800px;">
+                    <div class="form-group" style="flex: 3; margin-bottom: 0;">
+                        <label>CDR ID (Leave blank to pull all CDRs)</label>
+                        <input type="text" id="query-cdr-id" placeholder="e.g. 7a139be9-8278-4457-b5da-3c599833dbf6 or leave blank">
+                    </div>
+                    <button class="btn" onclick="queryCDRsInput()" style="flex: 1; height: 38px; white-space: nowrap; background: #7c3aed;">
+                        🧾 Fetch CDRs
+                    </button>
+                    <button class="btn btn-secondary" onclick="document.getElementById('query-cdr-id').value=''; queryCDRsInput();" style="height: 38px; white-space: nowrap;">
+                        Pull All
+                    </button>
+                </div>
             </div>
         </div>
 
-        <!-- 5. Live Activity & Audit Log (Interactive Expandable JSON Inspector) -->
-        <div class="card col-12">
-            <h2>
-                <span>📜 Activity & Audit Log (Interactive Expandable JSON Inspector)</span>
-                <div class="flex-row">
+        <!-- 5. LIVE CHARGING SESSIONS TABLE (Collapsible) -->
+        <div class="card col-12" id="card-sessions-table">
+            <div class="card-header" onclick="toggleCard('card-sessions-table')">
+                <span class="card-title">⚡ Active & Historical Charging Sessions</span>
+                <div class="card-actions-header" onclick="event.stopPropagation()">
+                    <button class="btn btn-secondary" style="font-size: 11px; padding: 4px 8px;" onclick="querySessionsInput()">Refresh</button>
+                    <button class="collapse-btn" onclick="toggleCard('card-sessions-table'); event.stopPropagation();">▼</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Session ID</th>
+                                <th>Status</th>
+                                <th>Energy (kWh)</th>
+                                <th>Cost</th>
+                                <th>Last Updated</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sessions-tbody">
+                            {% for s in sessions %}
+                            <tr>
+                                <td><code>{{ s.session_id }}</code></td>
+                                <td>
+                                    {% if s.status == "ACTIVE" %}
+                                    <span class="badge badge-success">{{ s.status }}</span>
+                                    {% elif s.status == "COMPLETED" %}
+                                    <span class="badge badge-info">{{ s.status }}</span>
+                                    {% else %}
+                                    <span class="badge badge-warning">{{ s.status }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ s.kwh }}</td>
+                                <td>₹{{ s.total_cost }} {{ s.currency }}</td>
+                                <td>{{ s.updated_at|date:"H:i:s (d M)" }}</td>
+                                <td>
+                                    {% if s.status == "ACTIVE" %}
+                                    <button class="btn btn-danger" style="font-size: 11px; padding: 2px 6px; margin-right: 4px;" onclick="useSessionForStop('{{ s.session_id }}')">Select for Stop</button>
+                                    {% endif %}
+                                    <button class="btn btn-secondary" style="font-size: 11px; padding: 2px 6px;" onclick='viewPayload({{ s.raw_data|safe }})'>JSON</button>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 20px;">
+                                    No sessions recorded yet. Pushed sessions from CPO or fetched sessions will appear here.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. CHARGE DETAIL RECORDS (CDRs) TABLE (Collapsible) -->
+        <div class="card col-12" id="card-cdrs-table">
+            <div class="card-header" onclick="toggleCard('card-cdrs-table')">
+                <span class="card-title">🧾 Charge Detail Records (CDRs)</span>
+                <div class="card-actions-header" onclick="event.stopPropagation()">
+                    <button class="btn btn-secondary" style="font-size: 11px; padding: 4px 8px;" onclick="queryCDRsInput()">Refresh</button>
+                    <button class="collapse-btn" onclick="toggleCard('card-cdrs-table'); event.stopPropagation();">▼</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>CDR ID</th>
+                                <th>Session Reference</th>
+                                <th>Total Energy</th>
+                                <th>Total Cost</th>
+                                <th>Created (UTC)</th>
+                                <th>Payload</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cdrs-tbody">
+                            {% for c in cdrs %}
+                            <tr>
+                                <td><code>{{ c.cdr_id }}</code></td>
+                                <td><code>{{ c.session_id|default:"-" }}</code></td>
+                                <td><strong style="color: #34d399;">{{ c.total_energy }} kWh</strong></td>
+                                <td>₹{{ c.total_cost }} {{ c.currency }}</td>
+                                <td>{{ c.created_at|date:"H:i:s (d M)" }}</td>
+                                <td><button class="btn btn-secondary" style="font-size: 11px; padding: 2px 6px;" onclick='viewPayload({{ c.raw_data|safe }})'>JSON</button></td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 20px;">
+                                    No CDRs recorded yet. Finalized billing CDRs pushed by CPO or fetched from CPO will appear here.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 7. Live Activity & Audit Log (Collapsible & Expandable JSON Inspector) -->
+        <div class="card col-12" id="card-audit-log">
+            <div class="card-header" onclick="toggleCard('card-audit-log')">
+                <span class="card-title">📜 Activity & Audit Log (Interactive Expandable JSON Inspector)</span>
+                <div class="card-actions-header" onclick="event.stopPropagation()">
                     <button class="btn btn-secondary" style="font-size: 11px; padding: 4px 8px;" onclick="toggleAllLogs(true)">Expand All</button>
                     <button class="btn btn-secondary" style="font-size: 11px; padding: 4px 8px;" onclick="toggleAllLogs(false)">Collapse All</button>
                     <button class="btn btn-secondary" style="font-size: 11px; padding: 4px 8px;" onclick="clearLogs()">Clear</button>
+                    <button class="collapse-btn" onclick="toggleCard('card-audit-log'); event.stopPropagation();">▼</button>
                 </div>
-            </h2>
-            <div class="log-container" id="audit-log-container">
-                <div style="color: var(--text-muted); font-size: 12px; padding: 12px; text-align: center;">Waiting for OCPI traffic...</div>
+            </div>
+            <div class="card-body">
+                <div class="log-container" id="audit-log-container">
+                    <div style="color: var(--text-muted); font-size: 12px; padding: 12px; text-align: center;">Waiting for OCPI traffic...</div>
+                </div>
             </div>
         </div>
 
@@ -436,13 +567,45 @@
 
     <!-- JSON Modal / Viewer Alert -->
     <script>
+        // ── Card Collapse State Management ──
+        function toggleCard(cardId) {
+            const card = document.getElementById(cardId);
+            if (!card) return;
+            card.classList.toggle('collapsed');
+            const isCollapsed = card.classList.contains('collapsed');
+            try {
+                localStorage.setItem('collapsed_' + cardId, isCollapsed ? 'true' : 'false');
+            } catch (e) {}
+        }
+
+        function restoreCollapsedCards() {
+            const cardIds = [
+                'card-config', 
+                'card-actions', 
+                'card-get-sessions', 
+                'card-get-cdrs', 
+                'card-sessions-table', 
+                'card-cdrs-table', 
+                'card-audit-log'
+            ];
+            cardIds.forEach(id => {
+                try {
+                    const saved = localStorage.getItem('collapsed_' + id);
+                    if (saved === 'true') {
+                        const el = document.getElementById(id);
+                        if (el) el.classList.add('collapsed');
+                    }
+                } catch (e) {}
+            });
+        }
+
         function viewPayload(data) {
             alert(JSON.stringify(data, null, 2));
         }
 
         function escapeHtml(str) {
-            if (!str) return '';
-            return str
+            if (str === null || str === undefined) return '';
+            return String(str)
                 .replace(/&/g, "&amp;")
                 .replace(/</g, "&lt;")
                 .replace(/>/g, "&gt;")
@@ -480,10 +643,12 @@
             }
         }
 
-        async function fetchSessions() {
-            const sid = prompt("Enter Session ID to fetch (or leave blank to fetch all sessions from CPO):", "");
-            const url = (sid && sid.trim()) ? `/ui/action/sessions?session_id=${encodeURIComponent(sid.trim())}` : '/ui/action/sessions';
-            logMsg(`[CLIENT] Requesting GET Sessions from CPO (${url})...`);
+        // Dedicated Get Sessions Trigger with ID input
+        async function querySessionsInput() {
+            const input = document.getElementById('query-session-id');
+            const sid = input ? input.value.trim() : '';
+            const url = sid ? `/ui/action/sessions?session_id=${encodeURIComponent(sid)}` : '/ui/action/sessions';
+            logMsg(`[CLIENT] Requesting GET Sessions from CPO (${sid ? 'ID: ' + sid : 'All Sessions'})...`);
             try {
                 const res = await fetch(url);
                 const json = await res.json();
@@ -494,10 +659,12 @@
             }
         }
 
-        async function fetchCDRs() {
-            const cid = prompt("Enter CDR ID to fetch (or leave blank to fetch all CDRs from CPO):", "");
-            const url = (cid && cid.trim()) ? `/ui/action/cdrs?cdr_id=${encodeURIComponent(cid.trim())}` : '/ui/action/cdrs';
-            logMsg(`[CLIENT] Requesting GET CDRs from CPO (${url})...`);
+        // Dedicated Get CDRs Trigger with ID input
+        async function queryCDRsInput() {
+            const input = document.getElementById('query-cdr-id');
+            const cid = input ? input.value.trim() : '';
+            const url = cid ? `/ui/action/cdrs?cdr_id=${encodeURIComponent(cid)}` : '/ui/action/cdrs';
+            logMsg(`[CLIENT] Requesting GET CDRs from CPO (${cid ? 'ID: ' + cid : 'All CDRs'})...`);
             try {
                 const res = await fetch(url);
                 const json = await res.json();
@@ -573,37 +740,10 @@
 
         async function clearLogs() {
             await fetch('/ui/api/clear-logs', { method: 'POST' });
+            lastLogHash = '';
+            expandedLogIds.clear();
+            isAllExpanded = false;
             document.getElementById('audit-log-container').innerHTML = '<div style="color: var(--text-muted); font-size: 12px; padding: 12px; text-align: center;">Logs cleared.</div>';
-        }
-
-        function toggleAllLogs(expand) {
-            document.querySelectorAll('#audit-log-container details').forEach(d => d.open = expand);
-        }
-
-        function logMsg(msg) {
-            const container = document.getElementById('audit-log-container');
-            const placeholder = container.querySelector('div');
-            if (placeholder) placeholder.remove();
-
-            const entry = document.createElement('details');
-            entry.className = 'log-entry';
-            entry.open = false;
-            entry.innerHTML = `
-                <summary>
-                    <span style="display: inline-flex; align-items: center; gap: 8px;">
-                        <span class="badge badge-purple" style="font-size: 10px; padding: 2px 6px;">💻 UI</span>
-                        <span style="color: #94a3b8; font-size: 11px;">[${new Date().toLocaleTimeString()}]</span>
-                        <strong style="color: #c084fc;">EVENT</strong>
-                        <span style="color: #e2e8f0;">UI Action</span>
-                    </span>
-                    <span style="color: #94a3b8; font-size: 11px; display: inline-flex; align-items: center; gap: 6px;">
-                        <span>${escapeHtml(msg.slice(0, 70))}</span>
-                        <span style="color: #38bdf8; font-weight: bold;">[JSON ▼]</span>
-                    </span>
-                </summary>
-                <pre><code>${escapeHtml(msg)}</code></pre>
-            `;
-            container.insertBefore(entry, container.firstChild);
         }
 
         function useSessionForStop(sessionId) {
@@ -613,24 +753,84 @@
                 input.focus();
                 logMsg(`[UI] Selected session ${sessionId} for STOP_SESSION command.`);
             }
+            // Also populate query session input
+            const qInput = document.getElementById('query-session-id');
+            if (qInput) qInput.value = sessionId;
+        }
+
+        // ── Non-Destructive Expandable Audit Log Engine ──
+        let lastLogHash = '';
+        const expandedLogIds = new Set();
+        let isAllExpanded = false;
+
+        function toggleAllLogs(expand) {
+            isAllExpanded = expand;
+            document.querySelectorAll('#audit-log-container details.log-entry').forEach(d => {
+                d.open = expand;
+                const match = d.id && d.id.match(/^log-item-(.+)$/);
+                if (match) {
+                    if (expand) expandedLogIds.add(match[1]);
+                    else expandedLogIds.delete(match[1]);
+                }
+            });
+        }
+
+        function handleLogToggle(el, id) {
+            if (el.open) {
+                expandedLogIds.add(String(id));
+            } else {
+                expandedLogIds.delete(String(id));
+                isAllExpanded = false;
+            }
+        }
+
+        function logMsg(msg) {
+            const container = document.getElementById('audit-log-container');
+            const placeholder = container.querySelector('div');
+            if (placeholder) placeholder.remove();
+
+            const randomId = 'client-' + Date.now() + '-' + Math.floor(Math.random()*1000);
+            const entry = document.createElement('details');
+            entry.className = 'log-entry';
+            entry.id = `log-item-${randomId}`;
+            entry.open = isAllExpanded;
+            entry.setAttribute('ontoggle', `handleLogToggle(this, '${randomId}')`);
+            entry.innerHTML = `
+                <summary>
+                    <span style="display: inline-flex; align-items: center; gap: 8px;">
+                        <span class="badge badge-purple" style="font-size: 10px; padding: 2px 6px;">💻 UI</span>
+                        <span style="color: #94a3b8; font-size: 11px;">[${new Date().toLocaleTimeString()}]</span>
+                        <strong style="color: #c084fc;">EVENT</strong>
+                        <span style="color: #e2e8f0; font-size: 12px;">UI Action</span>
+                    </span>
+                    <span style="color: #94a3b8; font-size: 11px; display: inline-flex; align-items: center; gap: 6px;">
+                        <span>${escapeHtml(msg.slice(0, 60))}</span>
+                        <span style="color: #38bdf8; font-weight: bold;">[JSON ▼]</span>
+                    </span>
+                </summary>
+                <pre><code>${escapeHtml(msg)}</code></pre>
+            `;
+            container.insertBefore(entry, container.firstChild);
         }
 
         function renderLogs(logs) {
             const container = document.getElementById('audit-log-container');
             if (!logs || logs.length === 0) return;
 
-            // Maintain which items were opened by user
-            const openIds = new Set();
-            document.querySelectorAll('#audit-log-container details[open]').forEach(d => {
-                if (d.id) openIds.add(d.id);
-            });
+            // Compute hash signature of incoming logs to prevent destructive re-renders
+            const currentHash = logs.map(l => `${l.id}_${l.timestamp}`).join('|');
+            if (currentHash === lastLogHash) {
+                // DOM is already up to date! Do NOT touch innerHTML to preserve user expansion & focus
+                return;
+            }
+            lastLogHash = currentHash;
 
             container.innerHTML = logs.map(l => {
                 const dirBadge = l.direction === 'IN' 
                     ? '<span class="badge badge-info" style="font-size: 10px; padding: 2px 6px;">📥 IN</span>'
                     : '<span class="badge badge-success" style="font-size: 10px; padding: 2px 6px;">📤 OUT</span>';
 
-                let statusBadge = '<span class="badge" style="background:#334155; color:#cbd5e1; font-size: 10px; padding: 2px 6px;">-</span>';
+                let statusBadge = '<span class="badge" style="background:#23334d; color:#cbd5e1; font-size: 10px; padding: 2px 6px;">-</span>';
                 if (l.status_code) {
                     if (l.status_code >= 200 && l.status_code < 300) {
                         statusBadge = `<span class="badge badge-success" style="font-size: 10px; padding: 2px 6px;">${l.status_code}</span>`;
@@ -645,14 +845,14 @@
                     ? JSON.stringify(l.details, null, 2)
                     : JSON.stringify({ summary: l.summary, endpoint: l.endpoint, method: l.method, status_code: l.status_code }, null, 2);
 
-                const isOpen = openIds.has(`log-item-${l.id}`) ? 'open' : '';
+                const isOpen = (isAllExpanded || expandedLogIds.has(String(l.id))) ? 'open' : '';
 
-                return `<details class="log-entry" id="log-item-${l.id}" ${isOpen}>
+                return `<details class="log-entry" id="log-item-${l.id}" ${isOpen} ontoggle="handleLogToggle(this, '${l.id}')">
                     <summary>
                         <span style="display: inline-flex; align-items: center; gap: 8px;">
                             ${dirBadge}
                             <span style="color: #94a3b8; font-size: 11px;">[${l.timestamp}]</span>
-                            <strong style="color: #38bdf8;">${l.method}</strong>
+                            <strong style="color: #38bdf8;">${escapeHtml(l.method)}</strong>
                             <code style="color: #e2e8f0; font-size: 11px;">${escapeHtml(l.endpoint)}</code>
                             ${statusBadge}
                         </span>
@@ -691,11 +891,11 @@
                             : ``;
 
                         return `<tr>
-                            <td><code>${s.session_id}</code></td>
-                            <td><span class="badge ${badgeClass}">${s.status}</span></td>
+                            <td><code>${escapeHtml(s.session_id)}</code></td>
+                            <td><span class="badge ${badgeClass}">${escapeHtml(s.status)}</span></td>
                             <td>${s.kwh || 0}</td>
-                            <td>₹${s.total_cost || 0} ${s.currency || 'INR'}</td>
-                            <td>${s.updated_at_fmt || s.updated_at ? s.updated_at.slice(11, 19) : '-'}</td>
+                            <td>₹${s.total_cost || 0} ${escapeHtml(s.currency || 'INR')}</td>
+                            <td>${s.updated_at_fmt || (s.updated_at ? s.updated_at.slice(11, 19) : '-')}</td>
                             <td>
                                 ${stopBtn}
                                 <button class="btn btn-secondary" style="font-size: 11px; padding: 2px 6px;" onclick='viewPayload(${JSON.stringify(s.raw_data || {})})'>JSON</button>
@@ -709,17 +909,17 @@
                 if (cdrData.cdrs && cdrData.cdrs.length > 0) {
                     cdrsTbody.innerHTML = cdrData.cdrs.map(c => {
                         return `<tr>
-                            <td><code>${c.cdr_id}</code></td>
-                            <td><code>${c.session_id || '-'}</code></td>
+                            <td><code>${escapeHtml(c.cdr_id)}</code></td>
+                            <td><code>${escapeHtml(c.session_id || '-')}</code></td>
                             <td><strong style="color: #34d399;">${c.total_energy} kWh</strong></td>
-                            <td>₹${c.total_cost} ${c.currency || 'INR'}</td>
-                            <td>${c.created_at_fmt || c.created_at ? c.created_at.slice(11, 19) : '-'}</td>
+                            <td>₹${c.total_cost} ${escapeHtml(c.currency || 'INR')}</td>
+                            <td>${c.created_at_fmt || (c.created_at ? c.created_at.slice(11, 19) : '-')}</td>
                             <td><button class="btn btn-secondary" style="font-size: 11px; padding: 2px 6px;" onclick='viewPayload(${JSON.stringify(c.raw_data || {})})'>JSON</button></td>
                         </tr>`;
                     }).join('');
                 }
 
-                // 3. Render expandable logs
+                // 3. Render expandable logs without destructive re-render
                 if (logData.logs) {
                     renderLogs(logData.logs);
                 }
@@ -728,6 +928,8 @@
             }
         }
 
+        // Initialize
+        restoreCollapsedCards();
         setInterval(pollData, 3000);
         pollData();
     </script>
