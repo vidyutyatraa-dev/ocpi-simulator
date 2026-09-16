@@ -21,6 +21,27 @@
             --code-bg: #070c18;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
+        /* Sleek Modern Scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #070c18;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #23334d;
+            border-radius: 4px;
+            border: 1px solid #1c2b44;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #38bdf8;
+        }
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: #23334d #070c18;
+        }
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-color);
@@ -208,12 +229,13 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
-            max-height: 480px;
+            max-height: 560px;
             overflow-y: auto;
             background: var(--code-bg);
             border: 1px solid var(--card-border);
             border-radius: 8px;
             padding: 10px;
+            overscroll-behavior: contain;
         }
         .log-entry {
             background: #0c1424;
@@ -234,26 +256,30 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: rgba(255, 255, 255, 0.02);
+            background: #0c1424;
             user-select: none;
+            position: sticky;
+            top: 0;
+            z-index: 2;
         }
         .log-entry summary::-webkit-details-marker {
             display: none;
         }
         .log-entry[open] summary {
             border-bottom: 1px solid #1c2b44;
-            background: rgba(59, 130, 246, 0.08);
+            background: #111a2d;
         }
         .log-entry pre {
             margin: 0;
-            padding: 10px 14px;
+            padding: 12px 16px;
             font-family: 'JetBrains Mono', monospace;
             font-size: 11px;
             color: #7dd3fc;
             background: #050912;
-            overflow-x: auto;
-            max-height: 280px;
-            line-height: 1.4;
+            overflow: visible;
+            white-space: pre-wrap;
+            word-break: break-word;
+            line-height: 1.5;
         }
         .flex-row { display: flex; gap: 8px; }
     </style>
@@ -784,6 +810,26 @@
             }
         }
 
+        function copyLogPayload(event, btn) {
+            event.stopPropagation();
+            event.preventDefault();
+            const entry = btn.closest('.log-entry');
+            if (!entry) return;
+            const pre = entry.querySelector('pre code');
+            if (!pre) return;
+            navigator.clipboard.writeText(pre.innerText).then(() => {
+                const oldText = btn.textContent;
+                btn.textContent = 'Copied!';
+                btn.style.color = '#34d399';
+                setTimeout(() => {
+                    btn.textContent = oldText;
+                    btn.style.color = '';
+                }, 1500);
+            }).catch(err => {
+                console.error("Copy failed", err);
+            });
+        }
+
         function logMsg(msg) {
             const container = document.getElementById('audit-log-container');
             const placeholder = container.querySelector('div');
@@ -803,8 +849,9 @@
                         <strong style="color: #c084fc;">EVENT</strong>
                         <span style="color: #e2e8f0; font-size: 12px;">UI Action</span>
                     </span>
-                    <span style="color: #94a3b8; font-size: 11px; display: inline-flex; align-items: center; gap: 6px;">
+                    <span style="color: #94a3b8; font-size: 11px; display: inline-flex; align-items: center; gap: 8px;">
                         <span>${escapeHtml(msg.slice(0, 60))}</span>
+                        <button class="btn btn-secondary" style="font-size: 10px; padding: 2px 7px; height: 22px;" onclick="copyLogPayload(event, this)">Copy</button>
                         <span style="color: #38bdf8; font-weight: bold;">[JSON ▼]</span>
                     </span>
                 </summary>
@@ -824,6 +871,8 @@
                 return;
             }
             lastLogHash = currentHash;
+
+            const prevScrollTop = container.scrollTop;
 
             container.innerHTML = logs.map(l => {
                 const dirBadge = l.direction === 'IN' 
@@ -856,14 +905,20 @@
                             <code style="color: #e2e8f0; font-size: 11px;">${escapeHtml(l.endpoint)}</code>
                             ${statusBadge}
                         </span>
-                        <span style="color: #94a3b8; font-size: 11px; display: inline-flex; align-items: center; gap: 6px;">
+                        <span style="color: #94a3b8; font-size: 11px; display: inline-flex; align-items: center; gap: 8px;">
                             <span>${escapeHtml(l.summary)}</span>
+                            <button class="btn btn-secondary" style="font-size: 10px; padding: 2px 7px; height: 22px;" onclick="copyLogPayload(event, this)">Copy</button>
                             <span style="color: #38bdf8; font-weight: bold;">[JSON ▼]</span>
                         </span>
                     </summary>
                     <pre><code>${escapeHtml(jsonStr)}</code></pre>
                 </details>`;
             }).join('');
+
+            // Restore scroll position so user viewport never snaps/jumps during polling
+            if (prevScrollTop > 0) {
+                container.scrollTop = prevScrollTop;
+            }
         }
 
         // Live Polling for Sessions, CDRs & Logs
