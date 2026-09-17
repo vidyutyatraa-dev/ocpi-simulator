@@ -121,6 +121,7 @@ def ocpi_command_callback(request: HttpRequest, command_id: str = "") -> JsonRes
     result_status = payload.get("result", "UNKNOWN")
     messages = payload.get("message", [])
     msg_text = messages[0].get("text", "") if messages and isinstance(messages, list) else str(messages)
+    session_id = payload.get("session_id", "")
 
     # Determine command type if known
     cmd_type = "START_SESSION" if "start" in msg_text.lower() else ("STOP_SESSION" if "stop" in msg_text.lower() else "GENERIC")
@@ -134,8 +135,20 @@ def ocpi_command_callback(request: HttpRequest, command_id: str = "") -> JsonRes
         payload=payload
     )
 
-    logger.info(f"SUCCESS: Received CPO CommandResult callback: result={result_status}, msg={msg_text}")
-    log_ocpi_activity('IN', 'commands', request.path, 'POST', 200, f"Callback received: {result_status} ({msg_text})", {'payload': payload})
+    # Format summary with session_id for Activity & Audit Log visibility
+    if session_id:
+        summary = f"Callback [{session_id}]: {result_status} ({msg_text})"
+    else:
+        summary = f"Callback received: {result_status} ({msg_text})"
+
+    logger.info(f"SUCCESS: Received CPO CommandResult callback: result={result_status}, session_id={session_id}, msg={msg_text}")
+    log_ocpi_activity('IN', 'commands', request.path, 'POST', 200, summary, {
+        'session_id': session_id,
+        'result': result_status,
+        'command_type': cmd_type,
+        'message': msg_text,
+        'payload': payload
+    })
 
     return make_ocpi_response(
         data={"received": True, "id": record.id},
@@ -174,7 +187,13 @@ def ocpi_session_receiver(request: HttpRequest, country_code: str = "IN", party_
         session.raw_data = payload
         session.save()
 
-        log_ocpi_activity('IN', 'sessions', request.path, request.method, 200, f"Session {session_id} [{session.status}]", {'payload': payload})
+        log_ocpi_activity('IN', 'sessions', request.path, request.method, 200, f"Session Push [{session_id}]: {session.status} ({session.kwh} kWh)", {
+            'session_id': session_id,
+            'status': session.status,
+            'kwh': session.kwh,
+            'total_cost': session.total_cost,
+            'payload': payload
+        })
         return make_ocpi_response(data={"session_id": session_id})
 
     # GET
@@ -210,7 +229,13 @@ def ocpi_cdr_receiver(request: HttpRequest, cdr_id: str = "") -> JsonResponse:
         cdr.raw_data = payload
         cdr.save()
 
-        log_ocpi_activity('IN', 'cdrs', request.path, 'POST', 200, f"CDR {cid} received ({cdr.total_energy} kWh)", {'payload': payload})
+        log_ocpi_activity('IN', 'cdrs', request.path, 'POST', 200, f"CDR Push [{cid}] Session [{cdr.session_id}]: {cdr.total_energy} kWh", {
+            'cdr_id': cid,
+            'session_id': cdr.session_id,
+            'total_energy': cdr.total_energy,
+            'total_cost': cdr.total_cost,
+            'payload': payload
+        })
         return make_ocpi_response(data={"cdr_id": cid}, http_status=201)
 
     # GET

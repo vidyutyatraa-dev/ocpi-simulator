@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.http import JsonResponse, HttpRequest
 from django.views.decorators.csrf import csrf_exempt
 from .models import SimulatorConfig, CommandCallback, ChargingSession, ChargeDetailRecord, AuditLog
-from .ocpi_utils import CPOClient, resolve_public_base_url
+from .ocpi_utils import CPOClient, resolve_public_base_url, log_ocpi_activity
 
 def dashboard_view(request: HttpRequest):
     """Renders the main simulator dashboard."""
@@ -112,6 +112,7 @@ def api_action_get_sessions(request: HttpRequest):
     # Sync retrieved sessions into local ChargingSession table
     data = result.get("data")
     items_to_sync = data if isinstance(data, list) else ([data] if isinstance(data, dict) and data else [])
+    synced_ids = []
     for s in items_to_sync:
         sid = s.get("id") or s.get("session_id")
         if sid:
@@ -129,6 +130,12 @@ def api_action_get_sessions(request: HttpRequest):
                     "raw_data": s
                 }
             )
+            synced_ids.append(sid)
+    if synced_ids:
+        log_ocpi_activity('OUT', 'sessions', '/ui/action/sessions', 'SYNC', 200,
+            f"Synced {len(synced_ids)} session(s): {', '.join(sid[:12] + '...' for sid in synced_ids[:5])}",
+            {'synced_session_ids': synced_ids, 'count': len(synced_ids)}
+        )
     return JsonResponse(result)
 
 @csrf_exempt
@@ -148,6 +155,7 @@ def api_action_get_cdrs(request: HttpRequest):
     # Sync retrieved CDRs into local ChargeDetailRecord table
     data = result.get("data")
     items_to_sync = data if isinstance(data, list) else ([data] if isinstance(data, dict) and data else [])
+    synced_ids = []
     for c in items_to_sync:
         cid = c.get("id") or c.get("cdr_id")
         if cid:
@@ -163,6 +171,12 @@ def api_action_get_cdrs(request: HttpRequest):
                     "raw_data": c
                 }
             )
+            synced_ids.append(cid)
+    if synced_ids:
+        log_ocpi_activity('OUT', 'cdrs', '/ui/action/cdrs', 'SYNC', 200,
+            f"Synced {len(synced_ids)} CDR(s): {', '.join(cid[:12] + '...' for cid in synced_ids[:5])}",
+            {'synced_cdr_ids': synced_ids, 'count': len(synced_ids)}
+        )
     return JsonResponse(result)
 
 @csrf_exempt
