@@ -290,8 +290,8 @@
         .right-pane .log-container {
             flex: 1;
             min-height: 0;
-            max-height: 100%;
             overflow-y: auto;
+            overflow-x: hidden;
         }
 
         /* Card & Collapsible Elements */
@@ -445,8 +445,33 @@
             border-radius: 8px;
             padding: 8px;
             overscroll-behavior: contain;
+            scrollbar-width: auto;
+            scrollbar-color: var(--primary) var(--scrollbar-track);
         }
+        /* Dedicated Chunky Larger Scrollbar for Activity & Audit Logs Section */
+        .log-container::-webkit-scrollbar {
+            width: 14px;
+            height: 14px;
+        }
+        .log-container::-webkit-scrollbar-track {
+            background: var(--scrollbar-track);
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            margin: 3px 0;
+        }
+        .log-container::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 8px;
+            border: 3px solid var(--scrollbar-track);
+            min-height: 48px;
+        }
+        .log-container::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-hover);
+        }
+
         .log-entry {
+            flex-shrink: 0;
+            width: 100%;
             background: var(--card-inner);
             border: 1px solid var(--code-border);
             border-radius: 6px;
@@ -465,9 +490,6 @@
             justify-content: space-between;
             background: var(--card-inner);
             user-select: none;
-            position: sticky;
-            top: 0;
-            z-index: 2;
         }
         .log-entry summary::-webkit-details-marker { display: none; }
         .log-entry[open] summary {
@@ -602,7 +624,8 @@
                 overflow: visible;
             }
             .right-pane .log-container, .left-pane .log-container {
-                max-height: 480px;
+                min-height: 480px;
+                max-height: 80vh;
             }
         }
     </style>
@@ -935,7 +958,7 @@
                 </div>
                 <div class="card-body">
                     <!-- Log Toolbar Filter, Global View Toggle & Auto-Scroll -->
-                    <div style="display: flex; gap: 8px; margin-bottom: 8px; align-items: center; flex-wrap: wrap;">
+                    <div style="flex-shrink: 0; display: flex; gap: 8px; margin-bottom: 8px; align-items: center; flex-wrap: wrap;">
                         <input type="text" id="log-filter-input" placeholder="Filter logs by endpoint, session, method, status..." style="font-size: 11px; padding: 5px 9px; flex: 1; min-width: 140px;" oninput="filterLogs()">
                         <div style="display: inline-flex; align-items: center; gap: 4px;">
                             <span style="font-size: 11px; color: var(--text-muted);">View:</span>
@@ -1545,7 +1568,7 @@
             container.insertBefore(entry, container.firstChild);
             
             const autoScroll = document.getElementById('auto-scroll-toggle');
-            if (autoScroll && autoScroll.checked) {
+            if (autoScroll && autoScroll.checked && container.scrollTop <= 50) {
                 container.scrollTop = 0;
             }
         }
@@ -1627,10 +1650,14 @@
             // Apply filter if active
             filterLogs();
 
-            // Auto-scroll or maintain position
+            // Auto-scroll or maintain position: only force top if user was already near top (<=50px)
             const autoScroll = document.getElementById('auto-scroll-toggle');
             if (autoScroll && autoScroll.checked) {
-                container.scrollTop = 0;
+                if (prevScrollTop <= 50) {
+                    container.scrollTop = 0;
+                } else {
+                    container.scrollTop = prevScrollTop;
+                }
             } else if (prevScrollTop > 0) {
                 container.scrollTop = prevScrollTop;
             }

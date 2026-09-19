@@ -9,10 +9,10 @@ def dashboard_view(request: HttpRequest):
     """Renders the main simulator dashboard."""
     cfg = SimulatorConfig.get_config()
     public_url = resolve_public_base_url(request)
-    recent_callbacks = CommandCallback.objects.all()[:15]
-    recent_sessions = ChargingSession.objects.all()[:15]
-    recent_cdrs = ChargeDetailRecord.objects.all()[:15]
-    recent_logs = AuditLog.objects.all()[:20]
+    recent_callbacks = CommandCallback.objects.all()[:50]
+    recent_sessions = ChargingSession.objects.all()[:50]
+    recent_cdrs = ChargeDetailRecord.objects.all()[:50]
+    recent_logs = AuditLog.objects.all()[:100]
 
     context = {
         'config': cfg,
@@ -232,7 +232,7 @@ def api_get_sessions(request: HttpRequest):
 
 def api_get_cdrs(request: HttpRequest):
     """Polling API: Returns recent charge detail records."""
-    items = list(ChargeDetailRecord.objects.all().values('cdr_id', 'session_id', 'total_energy', 'total_cost', 'currency', 'created_at', 'raw_data')[:30])
+    items = list(ChargeDetailRecord.objects.all().values('cdr_id', 'session_id', 'total_energy', 'total_cost', 'currency', 'created_at', 'raw_data')[:100])
     for item in items:
         if item.get('created_at'):
             item['created_at_fmt'] = item['created_at'].strftime('%H:%M:%S (%d %b)')
@@ -240,7 +240,7 @@ def api_get_cdrs(request: HttpRequest):
 
 def api_get_logs(request: HttpRequest):
     """Polling API: Returns recent audit logs with full JSON details."""
-    items = list(AuditLog.objects.all().values('id', 'direction', 'module', 'endpoint', 'method', 'status_code', 'summary', 'details', 'timestamp')[:35])
+    items = list(AuditLog.objects.all().values('id', 'direction', 'module', 'endpoint', 'method', 'status_code', 'summary', 'details', 'timestamp')[:250])
     for item in items:
         if item.get('timestamp'):
             item['timestamp'] = item['timestamp'].strftime('%H:%M:%S')
