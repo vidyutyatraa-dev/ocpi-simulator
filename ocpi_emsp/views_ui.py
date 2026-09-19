@@ -134,7 +134,10 @@ def api_action_get_sessions(request: HttpRequest):
     if synced_ids:
         log_ocpi_activity('OUT', 'sessions', '/ui/action/sessions', 'SYNC', 200,
             f"Synced {len(synced_ids)} session(s): {', '.join(sid[:12] + '...' for sid in synced_ids[:5])}",
-            {'synced_session_ids': synced_ids, 'count': len(synced_ids)}
+            {
+                'request': {'action': 'SYNC_SESSIONS', 'source': '/ui/action/sessions'},
+                'response': {'synced_session_ids': synced_ids, 'count': len(synced_ids)}
+            }
         )
     return JsonResponse(result)
 
@@ -175,7 +178,10 @@ def api_action_get_cdrs(request: HttpRequest):
     if synced_ids:
         log_ocpi_activity('OUT', 'cdrs', '/ui/action/cdrs', 'SYNC', 200,
             f"Synced {len(synced_ids)} CDR(s): {', '.join(cid[:12] + '...' for cid in synced_ids[:5])}",
-            {'synced_cdr_ids': synced_ids, 'count': len(synced_ids)}
+            {
+                'request': {'action': 'SYNC_CDRS', 'source': '/ui/action/cdrs'},
+                'response': {'synced_cdr_ids': synced_ids, 'count': len(synced_ids)}
+            }
         )
     return JsonResponse(result)
 

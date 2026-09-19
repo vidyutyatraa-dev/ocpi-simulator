@@ -18,7 +18,20 @@ def ocpi_versions(request: HttpRequest) -> JsonResponse:
         return make_ocpi_response({})
 
     base = resolve_public_base_url(request)
-    log_ocpi_activity('IN', 'versions', request.path, 'GET', 200, 'Version list requested')
+    resp_data = {
+        "data": [
+            {
+                "version": "2.2.1",
+                "url": f"{base}/ocpi/emsp/2.2.1"
+            }
+        ],
+        "status_code": 1000,
+        "status_message": "Success"
+    }
+    log_ocpi_activity('IN', 'versions', request.path, 'GET', 200, 'Version list requested', {
+        'request': {'method': 'GET', 'path': request.path},
+        'response': resp_data
+    })
     return make_ocpi_response(
         data=[
             {
@@ -44,7 +57,18 @@ def ocpi_version_details(request: HttpRequest) -> JsonResponse:
         {"identifier": "sessions", "role": "RECEIVER", "url": f"{base}/ocpi/emsp/2.2.1/sessions"},
         {"identifier": "cdrs", "role": "RECEIVER", "url": f"{base}/ocpi/emsp/2.2.1/cdrs"},
     ]
-    log_ocpi_activity('IN', 'versions', request.path, 'GET', 200, 'Endpoint details requested')
+    resp_data = {
+        "data": {
+            "version": "2.2.1",
+            "endpoints": endpoints
+        },
+        "status_code": 1000,
+        "status_message": "Success"
+    }
+    log_ocpi_activity('IN', 'versions', request.path, 'GET', 200, 'Endpoint details requested', {
+        'request': {'method': 'GET', 'path': request.path},
+        'response': resp_data
+    })
     return make_ocpi_response(
         data={
             "version": "2.2.1",
@@ -64,6 +88,7 @@ def ocpi_credentials(request: HttpRequest) -> JsonResponse:
     cfg = SimulatorConfig.get_config()
     base = resolve_public_base_url(request)
 
+    body = {}
     if request.method in ["POST", "PUT"]:
         try:
             body = json.loads(request.body or "{}")
@@ -83,8 +108,6 @@ def ocpi_credentials(request: HttpRequest) -> JsonResponse:
             cfg.cpo_url = cpo_base_url
             cfg.save()
 
-        log_ocpi_activity('IN', 'credentials', request.path, request.method, 200, 'CPO completed credentials handshake', {'received': body})
-
     # Return EMSP credentials to CPO
     data = {
         "token": cfg.token_c,
@@ -101,6 +124,16 @@ def ocpi_credentials(request: HttpRequest) -> JsonResponse:
             }
         ]
     }
+    resp_data = {
+        "data": data,
+        "status_code": 1000,
+        "status_message": "Success"
+    }
+    if request.method in ["POST", "PUT"]:
+        log_ocpi_activity('IN', 'credentials', request.path, request.method, 200, 'CPO completed credentials handshake', {
+            'request': body,
+            'response': resp_data
+        })
     return make_ocpi_response(data=data)
 
 @csrf_exempt
@@ -141,13 +174,18 @@ def ocpi_command_callback(request: HttpRequest, command_id: str = "") -> JsonRes
     else:
         summary = f"Callback received: {result_status} ({msg_text})"
 
+    resp_data = {
+        "data": {"received": True, "id": record.id},
+        "status_code": 1000,
+        "status_message": "Callback processed successfully"
+    }
     logger.info(f"SUCCESS: Received CPO CommandResult callback: result={result_status}, session_id={session_id}, msg={msg_text}")
     log_ocpi_activity('IN', 'commands', request.path, 'POST', 200, summary, {
+        'request': payload,
+        'response': resp_data,
         'session_id': session_id,
         'result': result_status,
-        'command_type': cmd_type,
-        'message': msg_text,
-        'payload': payload
+        'command_type': cmd_type
     })
 
     return make_ocpi_response(
@@ -187,12 +225,14 @@ def ocpi_session_receiver(request: HttpRequest, country_code: str = "IN", party_
         session.raw_data = payload
         session.save()
 
+        resp_data = {"data": {"session_id": session_id}, "status_code": 1000, "status_message": "Success"}
         log_ocpi_activity('IN', 'sessions', request.path, request.method, 200, f"Session Push [{session_id}]: {session.status} ({session.kwh} kWh)", {
+            'request': payload,
+            'response': resp_data,
             'session_id': session_id,
             'status': session.status,
             'kwh': session.kwh,
-            'total_cost': session.total_cost,
-            'payload': payload
+            'total_cost': session.total_cost
         })
         return make_ocpi_response(data={"session_id": session_id})
 
@@ -229,12 +269,14 @@ def ocpi_cdr_receiver(request: HttpRequest, cdr_id: str = "") -> JsonResponse:
         cdr.raw_data = payload
         cdr.save()
 
+        resp_data = {"data": {"cdr_id": cid}, "status_code": 1000, "status_message": "Success"}
         log_ocpi_activity('IN', 'cdrs', request.path, 'POST', 200, f"CDR Push [{cid}] Session [{cdr.session_id}]: {cdr.total_energy} kWh", {
+            'request': payload,
+            'response': resp_data,
             'cdr_id': cid,
             'session_id': cdr.session_id,
             'total_energy': cdr.total_energy,
-            'total_cost': cdr.total_cost,
-            'payload': payload
+            'total_cost': cdr.total_cost
         })
         return make_ocpi_response(data={"cdr_id": cid}, http_status=201)
 

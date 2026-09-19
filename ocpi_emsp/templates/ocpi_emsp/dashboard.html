@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="warm">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,57 +7,200 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-color: #0b1120;
-            --card-bg: #151f32;
-            --card-border: #23334d;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --primary: #3b82f6;
-            --primary-hover: #2563eb;
-            --success: #10b981;
-            --danger: #ef4444;
+        /* ── Theme Definitions: Default Warm Dark ── */
+        :root, [data-theme="warm"] {
+            --bg-color: #171615;
+            --card-bg: #22201e;
+            --card-border: #35322e;
+            --card-inner: #1a1917;
+            --text-main: #e6e2da;
+            --text-heading: #f7f4ed;
+            --text-muted: #9e978e;
+            --primary: #d97706;
+            --primary-hover: #b45309;
+            --success: #15803d;
+            --success-text: #4ade80;
+            --danger: #dc2626;
+            --danger-hover: #b91c1c;
+            --danger-text: #f87171;
             --warning: #f59e0b;
-            --code-bg: #070c18;
+            --warning-text: #fbbf24;
+            --info: #0284c7;
+            --info-text: #38bdf8;
+            --purple: #9333ea;
+            --purple-text: #c084fc;
+            --code-bg: #121110;
+            --code-border: #292723;
+            --code-text: #fcd34d;
+            --input-bg: #171614;
+            --input-border: #38342e;
+            --input-focus: #d97706;
+            --banner-bg: linear-gradient(135deg, rgba(217, 119, 6, 0.12), rgba(22, 163, 74, 0.08));
+            --banner-border: rgba(217, 119, 6, 0.3);
+            --banner-text: #fbbf24;
+            --table-header-bg: #1a1917;
+            --table-border: #2d2a26;
+            --table-hover: rgba(255, 255, 255, 0.02);
+            --btn-secondary-bg: #35322e;
+            --btn-secondary-text: #e6e2da;
+            --btn-secondary-hover: #44403b;
+            --scrollbar-thumb: #554e44;
+            --scrollbar-track: #151413;
         }
+
+        [data-theme="slate"] {
+            --bg-color: #12151d;
+            --card-bg: #181d28;
+            --card-border: #252e3e;
+            --card-inner: #131722;
+            --text-main: #d3dce8;
+            --text-heading: #f0f4f9;
+            --text-muted: #8292a8;
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --success: #10b981;
+            --success-text: #34d399;
+            --danger: #f43f5e;
+            --danger-hover: #e11d48;
+            --danger-text: #fb7185;
+            --warning: #f59e0b;
+            --warning-text: #fbbf24;
+            --info: #0ea5e9;
+            --info-text: #38bdf8;
+            --purple: #8b5cf6;
+            --purple-text: #c084fc;
+            --code-bg: #0f121a;
+            --code-border: #1e2533;
+            --code-text: #93c5fd;
+            --input-bg: #12151d;
+            --input-border: #283244;
+            --input-focus: #6366f1;
+            --banner-bg: linear-gradient(135deg, rgba(99, 102, 241, 0.09), rgba(16, 185, 129, 0.08));
+            --banner-border: rgba(99, 102, 241, 0.22);
+            --banner-text: #60a5fa;
+            --table-header-bg: #131722;
+            --table-border: #1f2736;
+            --table-hover: rgba(255, 255, 255, 0.02);
+            --btn-secondary-bg: #232a39;
+            --btn-secondary-text: #d3dce8;
+            --btn-secondary-hover: #2e374a;
+            --scrollbar-thumb: #475569;
+            --scrollbar-track: #10131c;
+        }
+
+        [data-theme="paper"] {
+            --bg-color: #f6f5f1;
+            --card-bg: #ffffff;
+            --card-border: #e2ded5;
+            --card-inner: #faf9f6;
+            --text-main: #242b35;
+            --text-heading: #0f172a;
+            --text-muted: #64748b;
+            --primary: #4338ca;
+            --primary-hover: #3730a3;
+            --success: #059669;
+            --success-text: #059669;
+            --danger: #e11d48;
+            --danger-hover: #be123c;
+            --danger-text: #e11d48;
+            --warning: #d97706;
+            --warning-text: #d97706;
+            --info: #0284c7;
+            --info-text: #0284c7;
+            --purple: #7c3aed;
+            --purple-text: #7c3aed;
+            --code-bg: #edebe4;
+            --code-border: #dad6cc;
+            --code-text: #1e3a8a;
+            --input-bg: #faf9f6;
+            --input-border: #d5d0c5;
+            --input-focus: #4338ca;
+            --banner-bg: linear-gradient(135deg, rgba(67, 56, 202, 0.07), rgba(5, 150, 105, 0.07));
+            --banner-border: rgba(67, 56, 202, 0.25);
+            --banner-text: #3730a3;
+            --table-header-bg: #f4f2eb;
+            --table-border: #e5e1d7;
+            --table-hover: rgba(0, 0, 0, 0.02);
+            --btn-secondary-bg: #e8e4db;
+            --btn-secondary-text: #242b35;
+            --btn-secondary-hover: #d8d3c7;
+            --scrollbar-thumb: #aba496;
+            --scrollbar-track: #e6e2d8;
+        }
+
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        /* Sleek Modern Scrollbars */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #070c18;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #23334d;
-            border-radius: 4px;
-            border: 1px solid #1c2b44;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #38bdf8;
-        }
-        * {
-            scrollbar-width: thin;
-            scrollbar-color: #23334d #070c18;
-        }
-        body {
+        
+        /* Modern Slim Scrollbars */
+        ::-webkit-scrollbar { width: 7px; height: 7px; }
+        ::-webkit-scrollbar-track { background: var(--scrollbar-track); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+        * { scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track); }
+
+        /* Full Viewport App Shell */
+        html, body {
+            height: 100vh;
+            max-height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
-            padding: 24px;
             line-height: 1.5;
+            transition: background-color 0.25s ease, color 0.25s ease;
         }
-        .header {
+
+        /* Top Bar */
+        .app-header {
+            flex-shrink: 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 24px;
-            padding-bottom: 16px;
+            padding: 10px 20px;
+            background: var(--card-bg);
             border-bottom: 1px solid var(--card-border);
         }
-        .header h1 { font-size: 22px; font-weight: 700; color: #fff; }
+        .app-header h1 {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-heading);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Theme Switcher */
+        .theme-switcher {
+            display: inline-flex;
+            background: var(--card-inner);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 2px;
+            gap: 2px;
+        }
+        .theme-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 4px 10px;
+            border-radius: 14px;
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        .theme-btn:hover { color: var(--text-main); }
+        .theme-btn.active {
+            background: var(--card-bg);
+            color: var(--text-heading);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            font-weight: 600;
+        }
+
         .badge {
             display: inline-block;
             padding: 3px 8px;
@@ -65,42 +208,105 @@
             font-size: 11px;
             font-weight: 600;
         }
-        .badge-success { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
-        .badge-danger { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
-        .badge-warning { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
-        .badge-info { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); }
-        .badge-purple { background: rgba(168, 85, 247, 0.2); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.4); }
+        .badge-success { background: rgba(16, 185, 129, 0.15); color: var(--success-text); border: 1px solid rgba(16, 185, 129, 0.3); }
+        .badge-danger { background: rgba(244, 63, 94, 0.15); color: var(--danger-text); border: 1px solid rgba(244, 63, 94, 0.3); }
+        .badge-warning { background: rgba(245, 158, 11, 0.15); color: var(--warning-text); border: 1px solid rgba(245, 158, 11, 0.3); }
+        .badge-info { background: rgba(14, 165, 233, 0.15); color: var(--info-text); border: 1px solid rgba(14, 165, 233, 0.3); }
+        .badge-purple { background: rgba(139, 92, 246, 0.15); color: var(--purple-text); border: 1px solid rgba(139, 92, 246, 0.3); }
 
-        .banner {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(16, 185, 129, 0.15));
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            border-radius: 12px;
-            padding: 16px 20px;
-            margin-bottom: 24px;
+        /* Compact Sub-Banner */
+        .app-subbanner {
+            flex-shrink: 0;
+            background: var(--banner-bg);
+            border-bottom: 1px solid var(--banner-border);
+            padding: 6px 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            font-size: 12px;
         }
-        .banner-label { font-size: 12px; text-transform: uppercase; color: var(--text-muted); font-weight: 600; }
-        .banner-url { font-family: 'JetBrains Mono', monospace; font-size: 16px; color: #38bdf8; font-weight: 600; }
+        .banner-label { font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 600; margin-right: 8px; }
+        .banner-url { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--banner-text); font-weight: 600; }
 
-        .grid {
+        /* Split Screen Container */
+        .split-container {
+            flex: 1;
+            min-height: 0;
             display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 20px;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            padding: 12px 20px 16px 20px;
+            overflow: hidden;
         }
-        .col-4 { grid-column: span 4; }
-        .col-8 { grid-column: span 8; }
-        .col-6 { grid-column: span 6; }
-        .col-12 { grid-column: span 12; }
 
-        /* Card & Collapsible Header */
+        /* Left Pane: Scrollable Panel with All Collapsible Sections */
+        .left-pane {
+            height: 100%;
+            min-height: 0;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            padding-right: 6px;
+        }
+
+        .controls-toolbar, .right-pane-toolbar {
+            flex-shrink: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+        }
+
+        /* Right Pane: Full-Height Real-Time Activity & Audit Log Stream */
+        .right-pane {
+            height: 100%;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .right-pane .card {
+            height: 100%;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            padding: 14px 16px;
+        }
+
+        .right-pane .card-body {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            padding-top: 4px;
+        }
+
+        .right-pane .log-container {
+            flex: 1;
+            min-height: 0;
+            max-height: 100%;
+            overflow-y: auto;
+        }
+
+        /* Card & Collapsible Elements */
         .card {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
-            border-radius: 12px;
-            padding: 18px 20px;
+            border-radius: 10px;
+            padding: 14px 16px;
             transition: all 0.2s ease-in-out;
+        }
+        .card-subpanel {
+            background: var(--card-inner);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 12px;
         }
         .card-header {
             display: flex;
@@ -108,15 +314,15 @@
             justify-content: space-between;
             cursor: pointer;
             user-select: none;
-            padding-bottom: 12px;
-            margin-bottom: 14px;
+            padding-bottom: 10px;
+            margin-bottom: 12px;
             border-bottom: 1px solid var(--card-border);
         }
-        .card-header:hover {
-            opacity: 0.95;
-        }
+        .card-header:hover { opacity: 0.95; }
+        
+        /* Collapsed State */
         .card.collapsed {
-            padding-bottom: 18px;
+            padding-bottom: 12px;
         }
         .card.collapsed .card-header {
             margin-bottom: 0;
@@ -127,53 +333,54 @@
             display: none !important;
         }
         .card-title {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 600;
             display: flex;
             align-items: center;
             gap: 8px;
-            color: #fff;
+            color: var(--text-heading);
         }
         .card-actions-header {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
         .collapse-btn {
-            background: rgba(255, 255, 255, 0.06);
+            background: var(--card-inner);
             border: 1px solid var(--card-border);
             color: var(--text-muted);
             border-radius: 6px;
-            width: 26px;
-            height: 26px;
+            width: 24px;
+            height: 24px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             font-size: 10px;
-            transition: transform 0.2s ease, background 0.2s;
+            transition: transform 0.2s ease, background 0.2s, color 0.2s;
         }
         .collapse-btn:hover {
-            background: rgba(255, 255, 255, 0.15);
-            color: #fff;
+            background: var(--btn-secondary-hover);
+            color: var(--text-heading);
         }
         .card.collapsed .collapse-btn {
             transform: rotate(-90deg);
         }
 
-        .form-group { margin-bottom: 12px; }
-        label { display: block; font-size: 12px; font-weight: 500; color: var(--text-muted); margin-bottom: 4px; }
+        .form-group { margin-bottom: 10px; }
+        label { display: block; font-size: 11px; font-weight: 500; color: var(--text-muted); margin-bottom: 3px; }
         input[type="text"], input[type="number"], select {
             width: 100%;
-            background: #080e1a;
-            border: 1px solid var(--card-border);
-            color: #fff;
-            padding: 8px 12px;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: var(--text-main);
+            padding: 7px 10px;
             border-radius: 6px;
-            font-size: 13px;
+            font-size: 12px;
             font-family: inherit;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
-        input:focus { outline: none; border-color: var(--primary); }
+        input:focus { outline: none; border-color: var(--input-focus); box-shadow: 0 0 0 2px rgba(217, 119, 6, 0.2); }
 
         .btn {
             display: inline-flex;
@@ -183,416 +390,622 @@
             background: var(--primary);
             color: #fff;
             border: none;
-            padding: 8px 14px;
+            padding: 6px 12px;
             border-radius: 6px;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
+            font-family: inherit;
+            white-space: nowrap;
         }
         .btn:hover { background: var(--primary-hover); }
-        .btn-success { background: #059669; }
-        .btn-success:hover { background: #047857; }
-        .btn-danger { background: #dc2626; }
-        .btn-danger:hover { background: #b91c1c; }
-        .btn-secondary { background: #23334d; color: #e2e8f0; }
-        .btn-secondary:hover { background: #334666; }
+        .btn-success { background: var(--success); }
+        .btn-success:hover { opacity: 0.9; }
+        .btn-danger { background: var(--danger); }
+        .btn-danger:hover { background: var(--danger-hover); }
+        .btn-secondary { background: var(--btn-secondary-bg); color: var(--btn-secondary-text); border: 1px solid var(--card-border); }
+        .btn-secondary:hover { background: var(--btn-secondary-hover); }
 
         .table-wrap {
             overflow-x: auto;
-            max-height: 280px;
+            max-height: 240px;
             overflow-y: auto;
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 13px;
+            font-size: 12px;
             text-align: left;
         }
         th {
-            background: #080e1a;
+            background: var(--table-header-bg);
             color: var(--text-muted);
             font-weight: 600;
-            padding: 8px 12px;
+            padding: 7px 10px;
             position: sticky;
             top: 0;
             border-bottom: 1px solid var(--card-border);
+            font-size: 11px;
+            text-transform: uppercase;
         }
         td {
-            padding: 8px 12px;
-            border-bottom: 1px solid #1a273e;
+            padding: 7px 10px;
+            border-bottom: 1px solid var(--table-border);
         }
-        tr:hover td { background: rgba(255,255,255,0.02); }
+        tr:hover td { background: var(--table-hover); }
 
         /* Expandable JSON Audit Log Styles */
         .log-container {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            max-height: 560px;
-            overflow-y: auto;
+            gap: 6px;
             background: var(--code-bg);
             border: 1px solid var(--card-border);
             border-radius: 8px;
-            padding: 10px;
+            padding: 8px;
             overscroll-behavior: contain;
         }
         .log-entry {
-            background: #0c1424;
-            border: 1px solid #1c2b44;
+            background: var(--card-inner);
+            border: 1px solid var(--code-border);
             border-radius: 6px;
             overflow: hidden;
             transition: border-color 0.2s;
         }
-        .log-entry:hover {
-            border-color: #38bdf8;
-        }
+        .log-entry:hover { border-color: var(--primary); }
         .log-entry summary {
             list-style: none;
             cursor: pointer;
-            padding: 8px 12px;
+            padding: 6px 10px;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 12px;
+            font-size: 11px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: #0c1424;
+            background: var(--card-inner);
             user-select: none;
             position: sticky;
             top: 0;
             z-index: 2;
         }
-        .log-entry summary::-webkit-details-marker {
-            display: none;
-        }
+        .log-entry summary::-webkit-details-marker { display: none; }
         .log-entry[open] summary {
-            border-bottom: 1px solid #1c2b44;
-            background: #111a2d;
+            border-bottom: 1px solid var(--code-border);
+            background: var(--card-bg);
         }
-        .log-entry pre {
+        .log-payload-wrapper {
+            position: relative;
+            background: var(--code-bg);
+            border-top: 1px solid var(--code-border);
+        }
+        .log-payload-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 12px;
+            background: var(--card-inner);
+            border-bottom: 1px solid var(--code-border);
+        }
+        .payload-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .btn-copy-json {
+            font-size: 11px;
+            padding: 2px 8px;
+            height: 22px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-family: inherit;
+        }
+        /* Request / Response Toggle Switch */
+        .toggle-pill-group, .log-view-toggle {
+            display: inline-flex;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            padding: 2px;
+            gap: 2px;
+        }
+        .toggle-btn, .global-toggle-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10.5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: inherit;
+        }
+        .toggle-btn:hover, .global-toggle-btn:hover {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .toggle-btn.active, .global-toggle-btn.active {
+            background: var(--primary);
+            color: #ffffff;
+            font-weight: 600;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+        }
+        .payload-active-label {
+            font-size: 10.5px;
+            font-weight: 600;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .log-payload-pre, .log-entry pre {
             margin: 0;
-            padding: 12px 16px;
+            padding: 12px 14px;
             font-family: 'JetBrains Mono', monospace;
             font-size: 11px;
-            color: #7dd3fc;
-            background: #050912;
-            overflow: visible;
-            white-space: pre-wrap;
-            word-break: break-word;
-            line-height: 1.5;
+            color: var(--code-text);
+            background: var(--code-bg);
+            max-height: 280px;
+            overflow-x: auto;
+            overflow-y: auto;
+            white-space: pre;
+            word-break: normal;
+            overflow-wrap: normal;
+            line-height: 1.45;
+            scrollbar-width: thin;
+            scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+        }
+        .log-payload-pre.expanded-full, .log-entry pre.expanded-full {
+            max-height: none !important;
+        }
+        .log-payload-pre::-webkit-scrollbar, .log-entry pre::-webkit-scrollbar, .modal-json-pre::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .log-payload-pre::-webkit-scrollbar-track, .log-entry pre::-webkit-scrollbar-track, .modal-json-pre::-webkit-scrollbar-track {
+            background: var(--scrollbar-track);
+            border-radius: 4px;
+        }
+        .log-payload-pre::-webkit-scrollbar-thumb, .log-entry pre::-webkit-scrollbar-thumb, .modal-json-pre::-webkit-scrollbar-thumb {
+            background: var(--scrollbar-thumb);
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .log-payload-pre::-webkit-scrollbar-thumb:hover, .log-entry pre::-webkit-scrollbar-thumb:hover, .modal-json-pre::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
         }
         .flex-row { display: flex; gap: 8px; }
+
+        /* Responsive Breakpoint for Mobile & Tablet */
+        @media (max-width: 1024px) {
+            html, body {
+                height: auto;
+                max-height: none;
+                overflow: auto;
+            }
+            .split-container {
+                grid-template-columns: 1fr;
+                height: auto;
+                overflow: visible;
+            }
+            .left-pane, .right-pane {
+                height: auto;
+                overflow: visible;
+            }
+            .right-pane .log-container, .left-pane .log-container {
+                max-height: 480px;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
-    <div class="header">
+    <!-- Top Application Header -->
+    <header class="app-header">
         <div>
             <h1>⚡ VidyutYatraa OCPI 2.2.1 EMSP Simulator</h1>
-            <p style="font-size: 13px; color: var(--text-muted);">Self-Hosted EV Roaming Simulator, Sessions & CDRs Inspector</p>
         </div>
-        <div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <!-- Theme Switcher Pills: Warm Dark is Default -->
+            <div class="theme-switcher">
+                <button class="theme-btn active" data-theme="warm" onclick="setTheme('warm')">☕ Warm Dark</button>
+                <button class="theme-btn" data-theme="slate" onclick="setTheme('slate')">🌙 Soft Slate</button>
+                <button class="theme-btn" data-theme="paper" onclick="setTheme('paper')">☀️ Paper Light</button>
+            </div>
             <span class="badge badge-success">● System Operational</span>
         </div>
+    </header>
+
+    <!-- Compact Active Callback Address Banner -->
+    <div class="app-subbanner">
+        <div style="display: flex; align-items: center;">
+            <span class="banner-label">Public EMSP Base URL:</span>
+            <span class="banner-url" id="live-base-url">{{ detected_public_url }}</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 6px;">
+            <span class="banner-label">Active Modules:</span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--success-text); font-weight: 500;">
+                /sessions · /cdrs · /commands/callback
+            </span>
+        </div>
     </div>
 
-    <!-- Active Callback Address Banner -->
-    <div class="banner">
-        <div>
-            <div class="banner-label">Public EMSP Base URL (Announced to CPO)</div>
-            <div class="banner-url" id="live-base-url">{{ detected_public_url }}</div>
-        </div>
-        <div style="text-align: right;">
-            <div class="banner-label">Receiver Endpoints Active</div>
-            <div style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #a7f3d0;">
-                /sessions, /cdrs, /commands/callback
-            </div>
-        </div>
-    </div>
+    <!-- Main Split Screen Workspace -->
+    <main class="split-container">
 
-    <!-- Main Grid -->
-    <div class="grid">
+        <!-- ============================================================ -->
+        <!-- LEFT PANE: Scrollable Panel with All Other Sections Collapsible -->
+        <!-- ============================================================ -->
+        <section class="left-pane" aria-label="Telemetry and Roaming Controls">
 
-        <!-- 1. Configuration & Identity (Collapsible) -->
-        <div class="card col-4" id="card-config">
-            <div class="card-header" onclick="toggleCard('card-config')">
-                <span class="card-title">⚙️ Partner Configuration</span>
-                <div class="card-actions-header" onclick="event.stopPropagation()">
-                    <button class="btn btn-secondary" onclick="saveConfig()" style="font-size: 11px; padding: 4px 8px;">Save</button>
-                    <button class="collapse-btn" onclick="toggleCard('card-config'); event.stopPropagation();">▼</button>
+            <!-- Global Expand/Collapse Toolbar for Left Pane -->
+            <div class="controls-toolbar">
+                <span style="font-size: 12px; font-weight: 600; color: var(--text-heading); display: flex; align-items: center; gap: 6px;">
+                    🛠️ Roaming Controls & Telemetry
+                </span>
+                <div style="display: flex; gap: 6px;">
+                    <button class="btn btn-secondary" style="font-size: 11px; padding: 3px 8px;" onclick="toggleAllControlCards(false)">▾ Expand All</button>
+                    <button class="btn btn-secondary" style="font-size: 11px; padding: 3px 8px;" onclick="toggleAllControlCards(true)">▸ Collapse All</button>
                 </div>
             </div>
-            <div class="card-body">
-                <div class="form-group">
-                    <label>CPO API Base URL</label>
-                    <input type="text" id="cfg-cpo-url" value="{{ config.cpo_url }}">
-                </div>
-                <div class="form-group">
-                    <label>Public Base URL (Override if behind NAT/Tunnel)</label>
-                    <input type="text" id="cfg-public-url" value="{{ config.public_base_url }}" placeholder="e.g. http://13.127.140.240:8000">
-                </div>
-                <div class="flex-row">
-                    <div class="form-group" style="flex: 1;">
-                        <label>Party ID</label>
-                        <input type="text" id="cfg-party-id" value="{{ config.party_id }}">
-                    </div>
-                    <div class="form-group" style="flex: 1;">
-                        <label>Country Code</label>
-                        <input type="text" id="cfg-country-code" value="{{ config.country_code }}">
+
+            <!-- 1. Partner Configuration & Credentials (Collapsible) -->
+            <div class="card" id="card-config">
+                <div class="card-header" onclick="toggleCard('card-config')">
+                    <span class="card-title">⚙️ Partner Configuration & Credentials</span>
+                    <div class="card-actions-header" onclick="event.stopPropagation()">
+                        <button class="btn btn-secondary" onclick="saveConfig()" style="font-size: 11px; padding: 3px 8px;">Save</button>
+                        <button class="collapse-btn" onclick="toggleCard('card-config'); event.stopPropagation();">▼</button>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label>Token A (Bootstrap Token for Initial Handshake)</label>
-                    <input type="text" id="cfg-token-a" value="{{ config.token_a }}" placeholder="Pre-shared token provided by CPO">
-                </div>
-                <div class="form-group">
-                    <label>Token B (Permanent Token to Call CPO)</label>
-                    <input type="text" id="cfg-token-b" value="{{ config.token_b }}">
-                </div>
-                <div class="form-group">
-                    <label>Token C (Secret for CPO to Call Back)</label>
-                    <input type="text" id="cfg-token-c" value="{{ config.token_c }}">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label>CPO API Base URL</label>
+                        <input type="text" id="cfg-cpo-url" value="{{ config.cpo_url }}">
+                    </div>
+                    <div class="form-group">
+                        <label>Public Base URL (Override if behind NAT/Tunnel)</label>
+                        <input type="text" id="cfg-public-url" value="{{ config.public_base_url }}" placeholder="e.g. http://13.127.140.240:8000">
+                    </div>
+                    <div class="flex-row">
+                        <div class="form-group" style="flex: 1;">
+                            <label>Party ID</label>
+                            <input type="text" id="cfg-party-id" value="{{ config.party_id }}">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label>Country Code</label>
+                            <input type="text" id="cfg-country-code" value="{{ config.country_code }}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Token A (Bootstrap Token for Initial Handshake)</label>
+                        <input type="text" id="cfg-token-a" value="{{ config.token_a }}" placeholder="Pre-shared bootstrap token provided by CPO">
+                    </div>
+                    <div class="form-group">
+                        <label>Token B (Permanent Token to Call CPO)</label>
+                        <input type="text" id="cfg-token-b" value="{{ config.token_b }}">
+                    </div>
+                    <div class="form-group">
+                        <label>Token C (Secret for CPO to Call Back)</label>
+                        <input type="text" id="cfg-token-c" value="{{ config.token_c }}">
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- 2. Actions & Discovery (Collapsible) -->
-        <div class="card col-8" id="card-actions">
-            <div class="card-header" onclick="toggleCard('card-actions')">
-                <span class="card-title">🚀 CPO Commands & Actions</span>
-                <div class="card-actions-header" onclick="event.stopPropagation()">
-                    <button class="collapse-btn" onclick="toggleCard('card-actions'); event.stopPropagation();">▼</button>
+            <!-- 2. CPO Commands & Trigger Actions (Collapsible) -->
+            <div class="card" id="card-actions">
+                <div class="card-header" onclick="toggleCard('card-actions')">
+                    <span class="card-title">🚀 CPO Commands & Actions</span>
+                    <div class="card-actions-header" onclick="event.stopPropagation()">
+                        <button class="collapse-btn" onclick="toggleCard('card-actions'); event.stopPropagation();">▼</button>
+                    </div>
                 </div>
-            </div>
-            <div class="card-body">
-                <div class="flex-row" style="margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
-                    <button class="btn btn-success" onclick="triggerAction('/ui/action/handshake')">🤝 Credentials Handshake</button>
-                    <button class="btn" onclick="triggerAction('/ui/action/locations')">📍 Fetch Locations</button>
-                    <button class="btn" onclick="triggerAction('/ui/action/tariffs')">💰 Fetch Tariffs</button>
-                    <button class="btn btn-secondary" onclick="registerToken()">💳 Register RFID Token</button>
-                </div>
+                <div class="card-body">
+                    <div class="flex-row" style="margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
+                        <button class="btn btn-success" onclick="triggerAction('/ui/action/handshake')">🤝 Credentials Handshake</button>
+                        <button class="btn" onclick="triggerAction('/ui/action/locations')">📍 Fetch Locations</button>
+                        <button class="btn" onclick="triggerAction('/ui/action/tariffs')">💰 Fetch Tariffs</button>
+                        <button class="btn btn-secondary" onclick="registerToken()">💳 Register RFID Token</button>
+                    </div>
 
-                <div class="grid" style="margin-top: 10px;">
-                    <!-- START SESSION -->
-                    <div class="col-6" style="background: #080e1a; padding: 12px; border-radius: 8px; border: 1px solid var(--card-border);">
-                        <h3 style="font-size: 14px; margin-bottom: 8px; color: #34d399;">▶️ START_SESSION Command</h3>
-                        <div class="form-group">
-                            <label>Location ID</label>
-                            <input type="text" id="cmd-loc-id" value="VYKA001">
-                        </div>
-                        <div class="form-group">
-                            <label>EVSE UID</label>
-                            <input type="text" id="cmd-evse-uid" value="IN*VYT*EVYKA001">
-                        </div>
-                        <div class="flex-row">
-                            <div class="form-group" style="flex: 1;">
-                                <label>Connector ID</label>
-                                <input type="number" id="cmd-conn-id" value="1">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <!-- START SESSION -->
+                        <div class="card-subpanel">
+                            <h3 style="font-size: 13px; margin-bottom: 8px; color: var(--success-text); font-weight: 600;">▶️ START_SESSION Command</h3>
+                            <div class="form-group">
+                                <label>Location ID</label>
+                                <input type="text" id="cmd-loc-id" value="VYKA001">
                             </div>
-                            <div class="form-group" style="flex: 2;">
-                                <label>Token UID</label>
-                                <input type="text" id="cmd-token-uid" value="RFID-TEST-001">
+                            <div class="form-group">
+                                <label>EVSE UID</label>
+                                <input type="text" id="cmd-evse-uid" value="IN*VYT*EVYKA001">
+                            </div>
+                            <div class="flex-row">
+                                <div class="form-group" style="flex: 1;">
+                                    <label>Connector</label>
+                                    <input type="number" id="cmd-conn-id" value="1">
+                                </div>
+                                <div class="form-group" style="flex: 2;">
+                                    <label>Token UID</label>
+                                    <input type="text" id="cmd-token-uid" value="RFID-TEST-001">
+                                </div>
+                            </div>
+                            <button class="btn btn-success" onclick="startSession()" style="width: 100%; margin-top: 4px;">Send START_SESSION</button>
+                        </div>
+
+                        <!-- STOP SESSION -->
+                        <div class="card-subpanel">
+                            <h3 style="font-size: 13px; margin-bottom: 8px; color: var(--danger-text); font-weight: 600;">⏹️ STOP_SESSION Command</h3>
+                            <div class="form-group">
+                                <label>Session ID / Transaction ID</label>
+                                <input type="text" id="cmd-session-id" placeholder="Paste session UUID or transaction ID">
+                            </div>
+                            <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">Select an active session from below or paste a session ID.</p>
+                            <button class="btn btn-danger" onclick="stopSession()" style="width: 100%; margin-top: 24px;">Send STOP_SESSION</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Query CPO Sessions (Collapsible) -->
+            <div class="card" id="card-get-sessions">
+                <div class="card-header" onclick="toggleCard('card-get-sessions')">
+                    <span class="card-title">⚡ Query CPO Sessions (GET /ocpi/cpo/2.2.1/sessions)</span>
+                    <div class="card-actions-header" onclick="event.stopPropagation()">
+                        <button class="collapse-btn" onclick="toggleCard('card-get-sessions'); event.stopPropagation();">▼</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 10px;">
+                        Fetch real-time charging sessions directly from CPO using standard OCPI <code>GET /sessions</code>.
+                        Enter a Session ID, or <strong>leave blank to pull all sessions</strong>.
+                    </p>
+                    <div class="flex-row" style="align-items: flex-end; gap: 8px;">
+                        <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                            <label>Session ID (Optional)</label>
+                            <input type="text" id="query-session-id" placeholder="e.g. 7a139be9-8278-4457-b5da-3c599833dbf6 or leave blank">
+                        </div>
+                        <button class="btn" onclick="querySessionsInput()" style="height: 34px;">
+                            ⚡ Fetch Sessions
+                        </button>
+                        <button class="btn btn-secondary" onclick="document.getElementById('query-session-id').value=''; querySessionsInput();" style="height: 34px;">
+                            Pull All
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Query CPO CDRs (Collapsible) -->
+            <div class="card" id="card-get-cdrs">
+                <div class="card-header" onclick="toggleCard('card-get-cdrs')">
+                    <span class="card-title">🧾 Query CPO CDRs (GET /ocpi/cpo/2.2.1/cdrs)</span>
+                    <div class="card-actions-header" onclick="event.stopPropagation()">
+                        <button class="collapse-btn" onclick="toggleCard('card-get-cdrs'); event.stopPropagation();">▼</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 10px;">
+                        Fetch finalized billing Charge Detail Records directly from CPO using standard OCPI <code>GET /cdrs</code>.
+                        Enter a CDR ID, or <strong>leave blank to pull all CDRs</strong>.
+                    </p>
+                    <div class="flex-row" style="align-items: flex-end; gap: 8px;">
+                        <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                            <label>CDR ID (Optional)</label>
+                            <input type="text" id="query-cdr-id" placeholder="e.g. 7a139be9-8278-4457-b5da-3c599833dbf6 or leave blank">
+                        </div>
+                        <button class="btn" onclick="queryCDRsInput()" style="height: 34px; background: var(--purple);">
+                            🧾 Fetch CDRs
+                        </button>
+                        <button class="btn btn-secondary" onclick="document.getElementById('query-cdr-id').value=''; queryCDRsInput();" style="height: 34px;">
+                            Pull All
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. Active & Historical Charging Sessions Table (Collapsible) -->
+            <div class="card" id="card-sessions-table">
+                <div class="card-header" onclick="toggleCard('card-sessions-table')">
+                    <span class="card-title">⚡ Active & Historical Charging Sessions</span>
+                    <div class="card-actions-header" onclick="event.stopPropagation()">
+                        <button class="btn btn-secondary" style="font-size: 11px; padding: 3px 8px;" onclick="querySessionsInput()">Refresh</button>
+                        <button class="collapse-btn" onclick="toggleCard('card-sessions-table'); event.stopPropagation();">▼</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Session ID</th>
+                                    <th>Status</th>
+                                    <th>Energy (kWh)</th>
+                                    <th>Cost</th>
+                                    <th>Last Updated</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sessions-tbody">
+                                {% for s in sessions %}
+                                <tr>
+                                    <td><code>{{ s.session_id }}</code></td>
+                                    <td>
+                                        {% if s.status == "ACTIVE" %}
+                                        <span class="badge badge-success">{{ s.status }}</span>
+                                        {% elif s.status == "COMPLETED" %}
+                                        <span class="badge badge-info">{{ s.status }}</span>
+                                        {% else %}
+                                        <span class="badge badge-warning">{{ s.status }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ s.kwh }}</td>
+                                    <td>₹{{ s.total_cost }} {{ s.currency }}</td>
+                                    <td>{{ s.updated_at|date:"H:i:s (d M)" }}</td>
+                                    <td>
+                                        {% if s.status == "ACTIVE" %}
+                                        <button class="btn btn-danger" style="font-size: 11px; padding: 2px 6px; margin-right: 4px;" onclick="useSessionForStop('{{ s.session_id }}')">Select for Stop</button>
+                                        {% endif %}
+                                        <button class="btn btn-secondary" style="font-size: 11px; padding: 2px 6px;" onclick='viewPayload({{ s.raw_data|safe }})'>JSON</button>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 20px;">
+                                        No sessions recorded yet. Pushed sessions from CPO or fetched sessions will appear here.
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. Charge Detail Records (CDRs) Table (Collapsible) -->
+            <div class="card" id="card-cdrs-table">
+                <div class="card-header" onclick="toggleCard('card-cdrs-table')">
+                    <span class="card-title">🧾 Charge Detail Records (CDRs)</span>
+                    <div class="card-actions-header" onclick="event.stopPropagation()">
+                        <button class="btn btn-secondary" style="font-size: 11px; padding: 3px 8px;" onclick="queryCDRsInput()">Refresh</button>
+                        <button class="collapse-btn" onclick="toggleCard('card-cdrs-table'); event.stopPropagation();">▼</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>CDR ID</th>
+                                    <th>Session Reference</th>
+                                    <th>Total Energy</th>
+                                    <th>Total Cost</th>
+                                    <th>Created (UTC)</th>
+                                    <th>Payload</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cdrs-tbody">
+                                {% for c in cdrs %}
+                                <tr>
+                                    <td><code>{{ c.cdr_id }}</code></td>
+                                    <td><code>{{ c.session_id|default:"-" }}</code></td>
+                                    <td><strong style="color: var(--success-text);">{{ c.total_energy }} kWh</strong></td>
+                                    <td>₹{{ c.total_cost }} {{ c.currency }}</td>
+                                    <td>{{ c.created_at|date:"H:i:s (d M)" }}</td>
+                                    <td><button class="btn btn-secondary" style="font-size: 11px; padding: 2px 6px;" onclick='viewPayload({{ c.raw_data|safe }})'>JSON</button></td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 20px;">
+                                        No CDRs recorded yet. Finalized billing CDRs pushed by CPO or fetched from CPO will appear here.
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- RIGHT PANE: Full-Height Real-Time Activity & Audit Log Stream -->
+        <!-- ============================================================ -->
+        <section class="right-pane" aria-label="Activity & Audit Log Stream">
+            <div class="card" id="card-audit-log">
+                <div class="card-header" style="cursor: default;">
+                    <span class="card-title">
+                        Activity & Audit Log
+                        <span class="badge badge-success" style="font-size: 10px; padding: 2px 6px;">Live Stream</span>
+                    </span>
+                    <div class="card-actions-header">
+                        <button class="btn btn-secondary" style="font-size: 11px; padding: 3px 7px;" onclick="toggleAllLogs(true)">Expand All</button>
+                        <button class="btn btn-secondary" style="font-size: 11px; padding: 3px 7px;" onclick="toggleAllLogs(false)">Collapse All</button>
+                        <button class="btn btn-secondary" style="font-size: 11px; padding: 3px 7px;" onclick="clearLogs()">Clear</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- Log Toolbar Filter, Global View Toggle & Auto-Scroll -->
+                    <div style="display: flex; gap: 8px; margin-bottom: 8px; align-items: center; flex-wrap: wrap;">
+                        <input type="text" id="log-filter-input" placeholder="Filter logs by endpoint, session, method, status..." style="font-size: 11px; padding: 5px 9px; flex: 1; min-width: 140px;" oninput="filterLogs()">
+                        <div style="display: inline-flex; align-items: center; gap: 4px;">
+                            <span style="font-size: 11px; color: var(--text-muted);">View:</span>
+                            <div class="toggle-pill-group">
+                                <button type="button" class="global-toggle-btn" id="btn-global-req" onclick="setGlobalLogView('request')">Request</button>
+                                <button type="button" class="global-toggle-btn active" id="btn-global-res" onclick="setGlobalLogView('response')">Response</button>
+                                <button type="button" class="global-toggle-btn" id="btn-global-both" onclick="setGlobalLogView('both')">Both</button>
                             </div>
                         </div>
-                        <button class="btn btn-success" onclick="startSession()" style="width: 100%; margin-top: 4px;">Send START_SESSION</button>
+                        <label style="margin: 0; font-size: 11px; display: flex; align-items: center; gap: 5px; color: var(--text-muted); cursor: pointer; user-select: none; white-space: nowrap;">
+                            <input type="checkbox" id="auto-scroll-toggle" checked style="width: auto;"> Auto-scroll
+                        </label>
                     </div>
 
-                    <!-- STOP SESSION -->
-                    <div class="col-6" style="background: #080e1a; padding: 12px; border-radius: 8px; border: 1px solid var(--card-border);">
-                        <h3 style="font-size: 14px; margin-bottom: 8px; color: #f87171;">⏹️ STOP_SESSION Command</h3>
-                        <div class="form-group">
-                            <label>Session ID / Transaction ID</label>
-                            <input type="text" id="cmd-session-id" placeholder="Paste session UUID or transaction ID">
-                        </div>
-                        <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 12px;">Select an active session from below or paste a session ID.</p>
-                        <button class="btn btn-danger" onclick="stopSession()" style="width: 100%; margin-top: 24px;">Send STOP_SESSION</button>
+                    <!-- Scrollable Log Container -->
+                    <div class="log-container" id="audit-log-container">
+                        <div style="color: var(--text-muted); font-size: 12px; padding: 16px; text-align: center;">Waiting for OCPI traffic...</div>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- 3. DEDICATED GET SESSIONS SECTION (Collapsible) -->
-        <div class="card col-12" id="card-get-sessions">
-            <div class="card-header" onclick="toggleCard('card-get-sessions')">
-                <span class="card-title">⚡ Query CPO Sessions (GET /ocpi/cpo/2.2.1/sessions)</span>
-                <div class="card-actions-header" onclick="event.stopPropagation()">
-                    <button class="collapse-btn" onclick="toggleCard('card-get-sessions'); event.stopPropagation();">▼</button>
-                </div>
-            </div>
-            <div class="card-body">
-                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">
-                    Fetch real-time charging sessions directly from CPO using standard OCPI <code>GET /sessions</code>.
-                    Enter a specific Session ID to retrieve a single session, or <strong>leave blank to pull all active & historical sessions</strong>.
-                </p>
-                <div class="flex-row" style="align-items: flex-end; gap: 12px; max-width: 800px;">
-                    <div class="form-group" style="flex: 3; margin-bottom: 0;">
-                        <label>Session ID (Leave blank to pull all sessions)</label>
-                        <input type="text" id="query-session-id" placeholder="e.g. 7a139be9-8278-4457-b5da-3c599833dbf6 or leave blank">
-                    </div>
-                    <button class="btn" onclick="querySessionsInput()" style="flex: 1; height: 38px; white-space: nowrap; background: #0284c7;">
-                        ⚡ Fetch Sessions
-                    </button>
-                    <button class="btn btn-secondary" onclick="document.getElementById('query-session-id').value=''; querySessionsInput();" style="height: 38px; white-space: nowrap;">
-                        Pull All
-                    </button>
-                </div>
-            </div>
-        </div>
+    </main>
 
-        <!-- 4. DEDICATED GET CDRs SECTION (Collapsible) -->
-        <div class="card col-12" id="card-get-cdrs">
-            <div class="card-header" onclick="toggleCard('card-get-cdrs')">
-                <span class="card-title">🧾 Query CPO CDRs (GET /ocpi/cpo/2.2.1/cdrs)</span>
-                <div class="card-actions-header" onclick="event.stopPropagation()">
-                    <button class="collapse-btn" onclick="toggleCard('card-get-cdrs'); event.stopPropagation();">▼</button>
+    <!-- JSON Payload Modal Dialog -->
+    <div id="json-modal-backdrop" style="display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.72); z-index: 9999; align-items: center; justify-content: center; backdrop-filter: blur(2px);">
+        <div style="background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; width: 90%; max-width: 680px; max-height: 85vh; display: flex; flex-direction: column; box-shadow: 0 16px 36px rgba(0,0,0,0.6); overflow: hidden;">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--card-border); background: var(--card-inner);">
+                <span style="font-size: 13px; font-weight: 600; color: var(--text-heading); display: flex; align-items: center; gap: 6px;">
+                    Record Payload JSON
+                </span>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <button id="modal-copy-btn" class="btn btn-secondary" style="font-size: 11px; padding: 3px 8px;" onclick="copyModalJson()">Copy JSON</button>
+                    <button class="btn btn-secondary" style="font-size: 13px; padding: 1px 7px; line-height: 1;" onclick="closeModal()">✕</button>
                 </div>
             </div>
-            <div class="card-body">
-                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">
-                    Fetch finalized billing Charge Detail Records directly from CPO using standard OCPI <code>GET /cdrs</code>.
-                    Enter a specific CDR ID, or <strong>leave blank to pull all CDRs</strong>.
-                </p>
-                <div class="flex-row" style="align-items: flex-end; gap: 12px; max-width: 800px;">
-                    <div class="form-group" style="flex: 3; margin-bottom: 0;">
-                        <label>CDR ID (Leave blank to pull all CDRs)</label>
-                        <input type="text" id="query-cdr-id" placeholder="e.g. 7a139be9-8278-4457-b5da-3c599833dbf6 or leave blank">
-                    </div>
-                    <button class="btn" onclick="queryCDRsInput()" style="flex: 1; height: 38px; white-space: nowrap; background: #7c3aed;">
-                        🧾 Fetch CDRs
-                    </button>
-                    <button class="btn btn-secondary" onclick="document.getElementById('query-cdr-id').value=''; queryCDRsInput();" style="height: 38px; white-space: nowrap;">
-                        Pull All
-                    </button>
-                </div>
-            </div>
+            <pre class="modal-json-pre" id="modal-json-content" style="margin: 0; padding: 14px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--code-text); background: var(--code-bg); max-height: 60vh; overflow-x: auto; overflow-y: auto; white-space: pre; line-height: 1.45; scrollbar-width: thin; scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);"></pre>
         </div>
-
-        <!-- 5. LIVE CHARGING SESSIONS TABLE (Collapsible) -->
-        <div class="card col-12" id="card-sessions-table">
-            <div class="card-header" onclick="toggleCard('card-sessions-table')">
-                <span class="card-title">⚡ Active & Historical Charging Sessions</span>
-                <div class="card-actions-header" onclick="event.stopPropagation()">
-                    <button class="btn btn-secondary" style="font-size: 11px; padding: 4px 8px;" onclick="querySessionsInput()">Refresh</button>
-                    <button class="collapse-btn" onclick="toggleCard('card-sessions-table'); event.stopPropagation();">▼</button>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="table-wrap">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Session ID</th>
-                                <th>Status</th>
-                                <th>Energy (kWh)</th>
-                                <th>Cost</th>
-                                <th>Last Updated</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="sessions-tbody">
-                            {% for s in sessions %}
-                            <tr>
-                                <td><code>{{ s.session_id }}</code></td>
-                                <td>
-                                    {% if s.status == "ACTIVE" %}
-                                    <span class="badge badge-success">{{ s.status }}</span>
-                                    {% elif s.status == "COMPLETED" %}
-                                    <span class="badge badge-info">{{ s.status }}</span>
-                                    {% else %}
-                                    <span class="badge badge-warning">{{ s.status }}</span>
-                                    {% endif %}
-                                </td>
-                                <td>{{ s.kwh }}</td>
-                                <td>₹{{ s.total_cost }} {{ s.currency }}</td>
-                                <td>{{ s.updated_at|date:"H:i:s (d M)" }}</td>
-                                <td>
-                                    {% if s.status == "ACTIVE" %}
-                                    <button class="btn btn-danger" style="font-size: 11px; padding: 2px 6px; margin-right: 4px;" onclick="useSessionForStop('{{ s.session_id }}')">Select for Stop</button>
-                                    {% endif %}
-                                    <button class="btn btn-secondary" style="font-size: 11px; padding: 2px 6px;" onclick='viewPayload({{ s.raw_data|safe }})'>JSON</button>
-                                </td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 20px;">
-                                    No sessions recorded yet. Pushed sessions from CPO or fetched sessions will appear here.
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- 6. CHARGE DETAIL RECORDS (CDRs) TABLE (Collapsible) -->
-        <div class="card col-12" id="card-cdrs-table">
-            <div class="card-header" onclick="toggleCard('card-cdrs-table')">
-                <span class="card-title">🧾 Charge Detail Records (CDRs)</span>
-                <div class="card-actions-header" onclick="event.stopPropagation()">
-                    <button class="btn btn-secondary" style="font-size: 11px; padding: 4px 8px;" onclick="queryCDRsInput()">Refresh</button>
-                    <button class="collapse-btn" onclick="toggleCard('card-cdrs-table'); event.stopPropagation();">▼</button>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="table-wrap">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>CDR ID</th>
-                                <th>Session Reference</th>
-                                <th>Total Energy</th>
-                                <th>Total Cost</th>
-                                <th>Created (UTC)</th>
-                                <th>Payload</th>
-                            </tr>
-                        </thead>
-                        <tbody id="cdrs-tbody">
-                            {% for c in cdrs %}
-                            <tr>
-                                <td><code>{{ c.cdr_id }}</code></td>
-                                <td><code>{{ c.session_id|default:"-" }}</code></td>
-                                <td><strong style="color: #34d399;">{{ c.total_energy }} kWh</strong></td>
-                                <td>₹{{ c.total_cost }} {{ c.currency }}</td>
-                                <td>{{ c.created_at|date:"H:i:s (d M)" }}</td>
-                                <td><button class="btn btn-secondary" style="font-size: 11px; padding: 2px 6px;" onclick='viewPayload({{ c.raw_data|safe }})'>JSON</button></td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 20px;">
-                                    No CDRs recorded yet. Finalized billing CDRs pushed by CPO or fetched from CPO will appear here.
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- 7. Live Activity & Audit Log (Collapsible & Expandable JSON Inspector) -->
-        <div class="card col-12" id="card-audit-log">
-            <div class="card-header" onclick="toggleCard('card-audit-log')">
-                <span class="card-title">📜 Activity & Audit Log (Interactive Expandable JSON Inspector)</span>
-                <div class="card-actions-header" onclick="event.stopPropagation()">
-                    <button class="btn btn-secondary" style="font-size: 11px; padding: 4px 8px;" onclick="toggleAllLogs(true)">Expand All</button>
-                    <button class="btn btn-secondary" style="font-size: 11px; padding: 4px 8px;" onclick="toggleAllLogs(false)">Collapse All</button>
-                    <button class="btn btn-secondary" style="font-size: 11px; padding: 4px 8px;" onclick="clearLogs()">Clear</button>
-                    <button class="collapse-btn" onclick="toggleCard('card-audit-log'); event.stopPropagation();">▼</button>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="log-container" id="audit-log-container">
-                    <div style="color: var(--text-muted); font-size: 12px; padding: 12px; text-align: center;">Waiting for OCPI traffic...</div>
-                </div>
-            </div>
-        </div>
-
     </div>
 
-    <!-- JSON Modal / Viewer Alert -->
+    <!-- JavaScript Engine -->
     <script>
+        // ── Robust Clipboard Copy Engine with Fallback ──
+        function copyTextToClipboard(text) {
+            if (navigator.clipboard && window.isSecureContext) {
+                return navigator.clipboard.writeText(text);
+            } else {
+                return new Promise((resolve, reject) => {
+                    const textArea = document.createElement('textarea');
+                    textArea.value = text;
+                    textArea.style.position = 'fixed';
+                    textArea.style.top = '-9999px';
+                    textArea.style.left = '-9999px';
+                    textArea.style.opacity = '0';
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    try {
+                        const successful = document.execCommand('copy');
+                        document.body.removeChild(textArea);
+                        if (successful) resolve();
+                        else reject(new Error('execCommand copy failed'));
+                    } catch (err) {
+                        document.body.removeChild(textArea);
+                        reject(err);
+                    }
+                });
+            }
+        }
+
         // ── Card Collapse State Management ──
         function toggleCard(cardId) {
             const card = document.getElementById(cardId);
@@ -604,6 +1017,28 @@
             } catch (e) {}
         }
 
+        function toggleAllControlCards(collapse) {
+            const cardIds = [
+                'card-config', 
+                'card-actions', 
+                'card-get-sessions', 
+                'card-get-cdrs', 
+                'card-sessions-table', 
+                'card-cdrs-table'
+            ];
+            cardIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    if (collapse) el.classList.add('collapsed');
+                    else el.classList.remove('collapsed');
+                    try {
+                        localStorage.setItem('collapsed_' + id, collapse ? 'true' : 'false');
+                    } catch (e) {}
+                }
+            });
+        }
+        const toggleAllRightCards = toggleAllControlCards;
+
         function restoreCollapsedCards() {
             const cardIds = [
                 'card-config', 
@@ -611,8 +1046,7 @@
                 'card-get-sessions', 
                 'card-get-cdrs', 
                 'card-sessions-table', 
-                'card-cdrs-table', 
-                'card-audit-log'
+                'card-cdrs-table'
             ];
             cardIds.forEach(id => {
                 try {
@@ -625,9 +1059,45 @@
             });
         }
 
+        // ── JSON Modal Engine for Sessions & CDRs ──
         function viewPayload(data) {
-            alert(JSON.stringify(data, null, 2));
+            const modal = document.getElementById('json-modal-backdrop');
+            const pre = document.getElementById('modal-json-content');
+            if (!modal || !pre) {
+                alert(JSON.stringify(data, null, 2));
+                return;
+            }
+            pre.textContent = (typeof data === 'string') ? data : JSON.stringify(data, null, 2);
+            modal.style.display = 'flex';
         }
+
+        function closeModal() {
+            const modal = document.getElementById('json-modal-backdrop');
+            if (modal) modal.style.display = 'none';
+        }
+
+        function copyModalJson() {
+            const pre = document.getElementById('modal-json-content');
+            const btn = document.getElementById('modal-copy-btn');
+            if (!pre || !btn) return;
+            copyTextToClipboard(pre.textContent).then(() => {
+                const orig = btn.innerHTML;
+                btn.innerHTML = 'Copied!';
+                btn.style.color = 'var(--success-text)';
+                setTimeout(() => {
+                    btn.innerHTML = orig;
+                    btn.style.color = '';
+                }, 1500);
+            });
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+        document.addEventListener('click', (e) => {
+            const modal = document.getElementById('json-modal-backdrop');
+            if (e.target === modal) closeModal();
+        });
 
         function escapeHtml(str) {
             if (str === null || str === undefined) return '';
@@ -640,32 +1110,32 @@
         }
 
         async function triggerAction(url) {
-            logMsg(`[CLIENT] Triggering ${url}...`);
+            const reqInfo = { action: 'TRIGGER_ACTION', url: url, method: 'POST' };
             try {
                 const res = await fetch(url, { method: 'POST' });
                 const json = await res.json();
-                logMsg(`[RESPONSE ${res.status}] ${JSON.stringify(json, null, 2)}`);
+                logMsg(`Trigger POST ${url} (${res.status})`, reqInfo, json);
                 pollData();
             } catch (err) {
-                logMsg(`[ERROR] ${err.message}`);
+                logMsg(`Error POST ${url}`, reqInfo, { error: err.message });
             }
         }
 
         async function registerToken() {
             const uid = prompt("Enter RFID Token UID to register:", "RFID-TEST-001");
             if (!uid) return;
-            logMsg(`[CLIENT] Registering token ${uid}...`);
+            const reqBody = { token_uid: uid, valid: true };
             try {
                 const res = await fetch('/ui/action/register-token', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ token_uid: uid, valid: true })
+                    body: JSON.stringify(reqBody)
                 });
                 const json = await res.json();
-                logMsg(`[RESPONSE] ${JSON.stringify(json, null, 2)}`);
+                logMsg(`Registered Token ${uid} (${res.status})`, reqBody, json);
                 pollData();
             } catch (err) {
-                logMsg(`[ERROR] ${err.message}`);
+                logMsg(`Error Registering Token ${uid}`, reqBody, { error: err.message });
             }
         }
 
@@ -674,14 +1144,14 @@
             const input = document.getElementById('query-session-id');
             const sid = input ? input.value.trim() : '';
             const url = sid ? `/ui/action/sessions?session_id=${encodeURIComponent(sid)}` : '/ui/action/sessions';
-            logMsg(`[CLIENT] Requesting GET Sessions from CPO (${sid ? 'ID: ' + sid : 'All Sessions'})...`);
+            const reqInfo = { method: 'GET', url: url, session_id: sid || 'ALL' };
             try {
                 const res = await fetch(url);
                 const json = await res.json();
-                logMsg(`[RESPONSE ${res.status}] ${JSON.stringify(json, null, 2)}`);
+                logMsg(`GET Sessions (${res.status})`, reqInfo, json);
                 pollData();
             } catch (err) {
-                logMsg(`[ERROR] ${err.message}`);
+                logMsg(`Error GET Sessions`, reqInfo, { error: err.message });
             }
         }
 
@@ -690,14 +1160,14 @@
             const input = document.getElementById('query-cdr-id');
             const cid = input ? input.value.trim() : '';
             const url = cid ? `/ui/action/cdrs?cdr_id=${encodeURIComponent(cid)}` : '/ui/action/cdrs';
-            logMsg(`[CLIENT] Requesting GET CDRs from CPO (${cid ? 'ID: ' + cid : 'All CDRs'})...`);
+            const reqInfo = { method: 'GET', url: url, cdr_id: cid || 'ALL' };
             try {
                 const res = await fetch(url);
                 const json = await res.json();
-                logMsg(`[RESPONSE ${res.status}] ${JSON.stringify(json, null, 2)}`);
+                logMsg(`GET CDRs (${res.status})`, reqInfo, json);
                 pollData();
             } catch (err) {
-                logMsg(`[ERROR] ${err.message}`);
+                logMsg(`Error GET CDRs`, reqInfo, { error: err.message });
             }
         }
 
@@ -706,37 +1176,38 @@
             const evse = document.getElementById('cmd-evse-uid').value;
             const conn = document.getElementById('cmd-conn-id').value;
             const token = document.getElementById('cmd-token-uid').value;
+            const reqBody = { location_id: loc, evse_uid: evse, connector_id: conn, token_uid: token };
 
-            logMsg(`[CLIENT] Dispatching START_SESSION for ${loc} (${evse})...`);
             try {
                 const res = await fetch('/ui/action/start-session', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ location_id: loc, evse_uid: evse, connector_id: conn, token_uid: token })
+                    body: JSON.stringify(reqBody)
                 });
                 const json = await res.json();
-                logMsg(`[RESPONSE] ${JSON.stringify(json, null, 2)}`);
+                logMsg(`START_SESSION dispatched (${res.status})`, reqBody, json);
                 pollData();
             } catch (err) {
-                logMsg(`[ERROR] ${err.message}`);
+                logMsg(`Error START_SESSION`, reqBody, { error: err.message });
             }
         }
 
         async function stopSession() {
             const sid = document.getElementById('cmd-session-id').value;
             if (!sid) { alert("Please provide Session ID"); return; }
-            logMsg(`[CLIENT] Dispatching STOP_SESSION for ${sid}...`);
+            const reqBody = { session_id: sid };
+
             try {
                 const res = await fetch('/ui/action/stop-session', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ session_id: sid })
+                    body: JSON.stringify(reqBody)
                 });
                 const json = await res.json();
-                logMsg(`[RESPONSE] ${JSON.stringify(json, null, 2)}`);
+                logMsg(`STOP_SESSION dispatched for ${sid} (${res.status})`, reqBody, json);
                 pollData();
             } catch (err) {
-                logMsg(`[ERROR] ${err.message}`);
+                logMsg(`Error STOP_SESSION`, reqBody, { error: err.message });
             }
         }
 
@@ -769,7 +1240,7 @@
             lastLogHash = '';
             expandedLogIds.clear();
             isAllExpanded = false;
-            document.getElementById('audit-log-container').innerHTML = '<div style="color: var(--text-muted); font-size: 12px; padding: 12px; text-align: center;">Logs cleared.</div>';
+            document.getElementById('audit-log-container').innerHTML = '<div style="color: var(--text-muted); font-size: 12px; padding: 16px; text-align: center;">Logs cleared.</div>';
         }
 
         function useSessionForStop(sessionId) {
@@ -782,6 +1253,19 @@
             // Also populate query session input
             const qInput = document.getElementById('query-session-id');
             if (qInput) qInput.value = sessionId;
+        }
+
+        // ── Filter Logs In-Memory ──
+        function filterLogs() {
+            const query = (document.getElementById('log-filter-input').value || '').toLowerCase().trim();
+            document.querySelectorAll('#audit-log-container details.log-entry').forEach(entry => {
+                if (!query) {
+                    entry.style.display = '';
+                    return;
+                }
+                const text = entry.textContent.toLowerCase();
+                entry.style.display = text.includes(query) ? '' : 'none';
+            });
         }
 
         // ── Non-Destructive Expandable Audit Log Engine ──
@@ -815,12 +1299,13 @@
             event.preventDefault();
             const entry = btn.closest('.log-entry');
             if (!entry) return;
-            const pre = entry.querySelector('pre code');
+            let pre = entry.querySelector('.log-payload-pre:not([style*="display: none"]) code');
+            if (!pre) pre = entry.querySelector('pre code');
             if (!pre) return;
-            navigator.clipboard.writeText(pre.innerText).then(() => {
+            copyTextToClipboard(pre.innerText || pre.textContent).then(() => {
                 const oldText = btn.textContent;
                 btn.textContent = 'Copied!';
-                btn.style.color = '#34d399';
+                btn.style.color = 'var(--success-text)';
                 setTimeout(() => {
                     btn.textContent = oldText;
                     btn.style.color = '';
@@ -830,10 +1315,169 @@
             });
         }
 
-        function logMsg(msg) {
+        let globalLogViewMode = 'response'; // Default to Response view
+
+        function extractReqRes(details, logItem) {
+            let req = null;
+            let res = null;
+
+            if (typeof details === 'string') {
+                try {
+                    details = JSON.parse(details);
+                } catch (e) {
+                    // String details that isn't JSON
+                }
+            }
+
+            if (details && typeof details === 'object' && !Array.isArray(details)) {
+                if ('request' in details) req = details.request;
+                else if ('payload' in details) req = details.payload;
+                else if ('received' in details) req = details.received;
+
+                if ('response' in details) res = details.response;
+                else if ('res' in details) res = details.res;
+            }
+
+            if (typeof req === 'string') {
+                try { req = JSON.parse(req); } catch (e) {}
+            }
+            if (typeof res === 'string') {
+                try { res = JSON.parse(res); } catch (e) {}
+            }
+
+            if (!req && !res) {
+                if (logItem && logItem.direction === 'IN') {
+                    req = details || { method: logItem.method, endpoint: logItem.endpoint };
+                    res = { status_code: (logItem && logItem.status_code) || 200, status_message: "Success" };
+                } else {
+                    req = {
+                        method: (logItem && logItem.method) || 'GET',
+                        endpoint: (logItem && logItem.endpoint) || '',
+                        summary: (logItem && logItem.summary) || ''
+                    };
+                    res = details || { status_code: (logItem && logItem.status_code) || 200 };
+                }
+            } else if (!req) {
+                req = {
+                    method: (logItem && logItem.method) || 'GET',
+                    endpoint: (logItem && logItem.endpoint) || '',
+                    summary: (logItem && logItem.summary) || '',
+                    note: "No request payload (GET query or header only)"
+                };
+            } else if (!res) {
+                res = {
+                    status_code: (logItem && logItem.status_code) || 200,
+                    status_message: (logItem && logItem.status_code && logItem.status_code < 400) ? "Success" : "Error",
+                    summary: (logItem && logItem.summary) || ''
+                };
+            }
+
+            const formatJson = (val) => {
+                if (val === null || val === undefined) return '{}';
+                if (typeof val === 'string') {
+                    try {
+                        return JSON.stringify(JSON.parse(val), null, 2);
+                    } catch (e) {
+                        return val;
+                    }
+                }
+                return JSON.stringify(val, null, 2);
+            };
+
+            const reqStr = formatJson(req);
+            const resStr = formatJson(res);
+            const combinedStr = formatJson({ request: req, response: res });
+
+            return { reqStr, resStr, combinedStr };
+        }
+
+        function toggleExpandHeight(btn) {
+            const wrapper = btn.closest('.log-payload-wrapper');
+            if (!wrapper) return;
+            const pres = wrapper.querySelectorAll('.log-payload-pre');
+            const isFull = btn.classList.toggle('expanded-full');
+            pres.forEach(p => p.classList.toggle('expanded-full', isFull));
+            btn.textContent = isFull ? 'Fit' : '↕ Expand';
+            btn.title = isFull ? 'Constrain height with scrollbar' : 'Expand full height without scrollbar';
+        }
+
+        function toggleLogView(btn, mode) {
+            const wrapper = btn.closest('.log-payload-wrapper');
+            if (!wrapper) return;
+
+            wrapper.querySelectorAll('.log-view-toggle .toggle-btn').forEach(b => {
+                b.classList.toggle('active', (b.getAttribute('data-mode') || b.textContent.trim().toLowerCase()) === mode);
+            });
+
+            const reqPre = wrapper.querySelector('.pre-request');
+            const resPre = wrapper.querySelector('.pre-response');
+            const bothPre = wrapper.querySelector('.pre-both');
+            const label = wrapper.querySelector('.payload-active-label');
+
+            if (reqPre) reqPre.style.display = 'none';
+            if (resPre) resPre.style.display = 'none';
+            if (bothPre) bothPre.style.display = 'none';
+
+            if (mode === 'request') {
+                if (reqPre) reqPre.style.display = 'block';
+                if (label) label.textContent = 'Request JSON';
+            } else if (mode === 'both') {
+                if (bothPre) bothPre.style.display = 'block';
+                if (label) label.textContent = 'Request & Response';
+            } else {
+                if (resPre) resPre.style.display = 'block';
+                if (label) label.textContent = 'Response JSON';
+            }
+            wrapper.setAttribute('data-active-tab', mode);
+        }
+
+        function setGlobalLogView(mode) {
+            globalLogViewMode = mode;
+            const btnReq = document.getElementById('btn-global-req');
+            const btnRes = document.getElementById('btn-global-res');
+            const btnBoth = document.getElementById('btn-global-both');
+            if (btnReq) btnReq.classList.toggle('active', mode === 'request');
+            if (btnRes) btnRes.classList.toggle('active', mode === 'response');
+            if (btnBoth) btnBoth.classList.toggle('active', mode === 'both');
+
+            document.querySelectorAll('.log-payload-wrapper').forEach(wrapper => {
+                const targetBtn = wrapper.querySelector(`.log-view-toggle .toggle-btn[data-mode="${mode}"]`);
+                if (targetBtn) {
+                    toggleLogView(targetBtn, mode);
+                } else {
+                    const fallbackBtn = Array.from(wrapper.querySelectorAll('.log-view-toggle .toggle-btn'))
+                        .find(b => (b.getAttribute('data-mode') || b.textContent.trim().toLowerCase()) === mode);
+                    if (fallbackBtn) toggleLogView(fallbackBtn, mode);
+                }
+            });
+        }
+
+        function copyExpandedJson(btn) {
+            const wrapper = btn.closest('.log-payload-wrapper') || btn.closest('.log-entry');
+            if (!wrapper) return;
+            let code = wrapper.querySelector('.log-payload-pre:not([style*="display: none"]) code');
+            if (!code) {
+                code = wrapper.querySelector('pre code');
+            }
+            if (!code) return;
+            const text = code.innerText || code.textContent;
+            copyTextToClipboard(text).then(() => {
+                const orig = btn.innerHTML;
+                btn.innerHTML = 'Copied!';
+                btn.style.color = 'var(--success-text)';
+                setTimeout(() => {
+                    btn.innerHTML = orig;
+                    btn.style.color = '';
+                }, 1500);
+            }).catch(err => {
+                console.error("Copy failed", err);
+            });
+        }
+
+        function logMsg(summary, reqData, resData) {
             const container = document.getElementById('audit-log-container');
             const placeholder = container.querySelector('div');
-            if (placeholder) placeholder.remove();
+            if (placeholder && placeholder.textContent.includes('Waiting for OCPI traffic')) placeholder.remove();
 
             const randomId = 'client-' + Date.now() + '-' + Math.floor(Math.random()*1000);
             const entry = document.createElement('details');
@@ -841,23 +1485,69 @@
             entry.id = `log-item-${randomId}`;
             entry.open = isAllExpanded;
             entry.setAttribute('ontoggle', `handleLogToggle(this, '${randomId}')`);
+
+            let reqObj = reqData;
+            let resObj = resData;
+            let summaryText = summary;
+
+            if (typeof summary === 'string') {
+                if (!reqObj && !resObj) {
+                    reqObj = { message: summary, time: new Date().toISOString() };
+                    resObj = { status: "OK", timestamp: new Date().toISOString() };
+                } else if (reqObj && !resObj) {
+                    resObj = reqObj;
+                    reqObj = { summary: summary, time: new Date().toISOString() };
+                }
+            } else if (typeof summary === 'object' && summary !== null) {
+                resObj = reqData || { status: "OK", timestamp: new Date().toISOString() };
+                reqObj = summary;
+                summaryText = reqObj.summary || reqObj.message || 'UI Action';
+            }
+
+            const { reqStr, resStr, combinedStr } = extractReqRes({ request: reqObj, response: resObj });
+
+            let activeLabel = 'Response JSON';
+            if (globalLogViewMode === 'request') activeLabel = 'Request JSON';
+            else if (globalLogViewMode === 'both') activeLabel = 'Request & Response';
+
             entry.innerHTML = `
                 <summary>
-                    <span style="display: inline-flex; align-items: center; gap: 8px;">
-                        <span class="badge badge-purple" style="font-size: 10px; padding: 2px 6px;">💻 UI</span>
-                        <span style="color: #94a3b8; font-size: 11px;">[${new Date().toLocaleTimeString()}]</span>
-                        <strong style="color: #c084fc;">EVENT</strong>
-                        <span style="color: #e2e8f0; font-size: 12px;">UI Action</span>
+                    <span style="display: inline-flex; align-items: center; gap: 6px;">
+                        <span class="badge badge-purple" style="font-size: 10px; padding: 2px 6px;">UI</span>
+                        <span style="color: var(--text-muted); font-size: 11px;">[${new Date().toLocaleTimeString()}]</span>
+                        <strong style="color: var(--purple-text);">EVENT</strong>
+                        <span style="color: var(--text-main); font-size: 11px;">UI Action</span>
                     </span>
-                    <span style="color: #94a3b8; font-size: 11px; display: inline-flex; align-items: center; gap: 8px;">
-                        <span>${escapeHtml(msg.slice(0, 60))}</span>
-                        <button class="btn btn-secondary" style="font-size: 10px; padding: 2px 7px; height: 22px;" onclick="copyLogPayload(event, this)">Copy</button>
-                        <span style="color: #38bdf8; font-weight: bold;">[JSON ▼]</span>
+                    <span style="color: var(--text-muted); font-size: 11px; display: inline-flex; align-items: center; gap: 6px;">
+                        <span>${escapeHtml(summaryText)}</span>
+                        <button class="btn btn-secondary" style="font-size: 10px; padding: 2px 6px; height: 20px;" onclick="copyLogPayload(event, this)">Copy</button>
+                        <span style="color: var(--info-text); font-weight: bold;">[JSON]</span>
                     </span>
                 </summary>
-                <pre><code>${escapeHtml(msg)}</code></pre>
+                <div class="log-payload-wrapper" data-active-tab="${globalLogViewMode}">
+                    <div class="log-payload-toolbar">
+                        <div class="log-view-toggle">
+                            <button type="button" class="toggle-btn ${globalLogViewMode === 'request' ? 'active' : ''}" data-mode="request" onclick="toggleLogView(this, 'request')">Request</button>
+                            <button type="button" class="toggle-btn ${globalLogViewMode === 'response' ? 'active' : ''}" data-mode="response" onclick="toggleLogView(this, 'response')">Response</button>
+                            <button type="button" class="toggle-btn ${globalLogViewMode === 'both' ? 'active' : ''}" data-mode="both" onclick="toggleLogView(this, 'both')">Both</button>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span class="payload-active-label">${activeLabel}</span>
+                            <button type="button" class="btn btn-secondary btn-copy-json" onclick="toggleExpandHeight(this)" title="Toggle full height">↕ Expand</button>
+                            <button type="button" class="btn btn-secondary btn-copy-json" onclick="copyExpandedJson(this)">Copy JSON</button>
+                        </div>
+                    </div>
+                    <pre class="log-payload-pre pre-request" style="display: ${globalLogViewMode === 'request' ? 'block' : 'none'};"><code>${escapeHtml(reqStr)}</code></pre>
+                    <pre class="log-payload-pre pre-response" style="display: ${globalLogViewMode === 'response' ? 'block' : 'none'};"><code>${escapeHtml(resStr)}</code></pre>
+                    <pre class="log-payload-pre pre-both" style="display: ${globalLogViewMode === 'both' ? 'block' : 'none'};"><code>${escapeHtml(combinedStr)}</code></pre>
+                </div>
             `;
             container.insertBefore(entry, container.firstChild);
+            
+            const autoScroll = document.getElementById('auto-scroll-toggle');
+            if (autoScroll && autoScroll.checked) {
+                container.scrollTop = 0;
+            }
         }
 
         function renderLogs(logs) {
@@ -867,7 +1557,6 @@
             // Compute hash signature of incoming logs to prevent destructive re-renders
             const currentHash = logs.map(l => `${l.id}_${l.timestamp}`).join('|');
             if (currentHash === lastLogHash) {
-                // DOM is already up to date! Do NOT touch innerHTML to preserve user expansion & focus
                 return;
             }
             lastLogHash = currentHash;
@@ -876,12 +1565,12 @@
 
             container.innerHTML = logs.map(l => {
                 const dirBadge = l.direction === 'IN' 
-                    ? '<span class="badge badge-info" style="font-size: 10px; padding: 2px 6px;">📥 IN</span>'
+                    ? '<span class="badge badge-info" style="font-size: 10px; padding: 2px 6px;">IN</span>'
                     : (l.method === 'SYNC'
-                        ? '<span class="badge" style="background: #7c3aed; color: #fff; font-size: 10px; padding: 2px 6px;">🔄 SYNC</span>'
-                        : '<span class="badge badge-success" style="font-size: 10px; padding: 2px 6px;">📤 OUT</span>');
+                        ? '<span class="badge badge-purple" style="font-size: 10px; padding: 2px 6px;">SYNC</span>'
+                        : '<span class="badge badge-success" style="font-size: 10px; padding: 2px 6px;">OUT</span>');
 
-                let statusBadge = '<span class="badge" style="background:#23334d; color:#cbd5e1; font-size: 10px; padding: 2px 6px;">-</span>';
+                let statusBadge = '<span class="badge" style="background:var(--btn-secondary-bg); color:var(--text-muted); font-size: 10px; padding: 2px 6px;">-</span>';
                 if (l.status_code) {
                     if (l.status_code >= 200 && l.status_code < 300) {
                         statusBadge = `<span class="badge badge-success" style="font-size: 10px; padding: 2px 6px;">${l.status_code}</span>`;
@@ -892,33 +1581,57 @@
                     }
                 }
 
-                const jsonStr = (l.details && Object.keys(l.details).length > 0)
-                    ? JSON.stringify(l.details, null, 2)
-                    : JSON.stringify({ summary: l.summary, endpoint: l.endpoint, method: l.method, status_code: l.status_code }, null, 2);
+                const { reqStr, resStr, combinedStr } = extractReqRes(l.details, l);
 
                 const isOpen = (isAllExpanded || expandedLogIds.has(String(l.id))) ? 'open' : '';
 
+                let activeLabel = 'Response JSON';
+                if (globalLogViewMode === 'request') activeLabel = 'Request JSON';
+                else if (globalLogViewMode === 'both') activeLabel = 'Request & Response';
+
                 return `<details class="log-entry" id="log-item-${l.id}" ${isOpen} ontoggle="handleLogToggle(this, '${l.id}')">
                     <summary>
-                        <span style="display: inline-flex; align-items: center; gap: 8px;">
+                        <span style="display: inline-flex; align-items: center; gap: 6px;">
                             ${dirBadge}
-                            <span style="color: #94a3b8; font-size: 11px;">[${l.timestamp}]</span>
-                            <strong style="color: #38bdf8;">${escapeHtml(l.method)}</strong>
-                            <code style="color: #e2e8f0; font-size: 11px;">${escapeHtml(l.endpoint)}</code>
+                            <span style="color: var(--text-muted); font-size: 11px;">[${l.timestamp}]</span>
+                            <strong style="color: var(--info-text);">${escapeHtml(l.method)}</strong>
+                            <code style="color: var(--text-main); font-size: 11px;">${escapeHtml(l.endpoint)}</code>
                             ${statusBadge}
                         </span>
-                        <span style="color: #94a3b8; font-size: 11px; display: inline-flex; align-items: center; gap: 8px;">
+                        <span style="color: var(--text-muted); font-size: 11px; display: inline-flex; align-items: center; gap: 6px;">
                             <span>${escapeHtml(l.summary)}</span>
-                            <button class="btn btn-secondary" style="font-size: 10px; padding: 2px 7px; height: 22px;" onclick="copyLogPayload(event, this)">Copy</button>
-                            <span style="color: #38bdf8; font-weight: bold;">[JSON ▼]</span>
+                            <button class="btn btn-secondary" style="font-size: 10px; padding: 2px 6px; height: 20px;" onclick="copyLogPayload(event, this)">Copy</button>
+                            <span style="color: var(--info-text); font-weight: bold;">[JSON]</span>
                         </span>
                     </summary>
-                    <pre><code>${escapeHtml(jsonStr)}</code></pre>
+                    <div class="log-payload-wrapper" data-active-tab="${globalLogViewMode}">
+                        <div class="log-payload-toolbar">
+                            <div class="log-view-toggle">
+                                <button type="button" class="toggle-btn ${globalLogViewMode === 'request' ? 'active' : ''}" data-mode="request" onclick="toggleLogView(this, 'request')">Request</button>
+                                <button type="button" class="toggle-btn ${globalLogViewMode === 'response' ? 'active' : ''}" data-mode="response" onclick="toggleLogView(this, 'response')">Response</button>
+                                <button type="button" class="toggle-btn ${globalLogViewMode === 'both' ? 'active' : ''}" data-mode="both" onclick="toggleLogView(this, 'both')">Both</button>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span class="payload-active-label">${activeLabel}</span>
+                                <button type="button" class="btn btn-secondary btn-copy-json" onclick="toggleExpandHeight(this)" title="Toggle full height">↕ Expand</button>
+                                <button type="button" class="btn btn-secondary btn-copy-json" onclick="copyExpandedJson(this)">Copy JSON</button>
+                            </div>
+                        </div>
+                        <pre class="log-payload-pre pre-request" style="display: ${globalLogViewMode === 'request' ? 'block' : 'none'};"><code>${escapeHtml(reqStr)}</code></pre>
+                        <pre class="log-payload-pre pre-response" style="display: ${globalLogViewMode === 'response' ? 'block' : 'none'};"><code>${escapeHtml(resStr)}</code></pre>
+                        <pre class="log-payload-pre pre-both" style="display: ${globalLogViewMode === 'both' ? 'block' : 'none'};"><code>${escapeHtml(combinedStr)}</code></pre>
+                    </div>
                 </details>`;
             }).join('');
 
-            // Restore scroll position so user viewport never snaps/jumps during polling
-            if (prevScrollTop > 0) {
+            // Apply filter if active
+            filterLogs();
+
+            // Auto-scroll or maintain position
+            const autoScroll = document.getElementById('auto-scroll-toggle');
+            if (autoScroll && autoScroll.checked) {
+                container.scrollTop = 0;
+            } else if (prevScrollTop > 0) {
                 container.scrollTop = prevScrollTop;
             }
         }
@@ -968,7 +1681,7 @@
                         return `<tr>
                             <td><code>${escapeHtml(c.cdr_id)}</code></td>
                             <td><code>${escapeHtml(c.session_id || '-')}</code></td>
-                            <td><strong style="color: #34d399;">${c.total_energy} kWh</strong></td>
+                            <td><strong style="color: var(--success-text);">${c.total_energy} kWh</strong></td>
                             <td>₹${c.total_cost} ${escapeHtml(c.currency || 'INR')}</td>
                             <td>${c.created_at_fmt || (c.created_at ? c.created_at.slice(11, 19) : '-')}</td>
                             <td><button class="btn btn-secondary" style="font-size: 11px; padding: 2px 6px;" onclick='viewPayload(${JSON.stringify(c.raw_data || {})})'>JSON</button></td>
@@ -985,7 +1698,26 @@
             }
         }
 
-        // Initialize
+        // ── Eye-Comfort Theme Switcher Engine: Warm Dark Default ──
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            try {
+                localStorage.setItem('ocpi_simulator_theme', theme);
+            } catch (e) {}
+            document.querySelectorAll('.theme-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-theme') === theme);
+            });
+        }
+
+        // Initialize: Default to warm dark
+        (function() {
+            let savedTheme = 'warm';
+            try {
+                savedTheme = localStorage.getItem('ocpi_simulator_theme') || 'warm';
+            } catch (e) {}
+            setTheme(savedTheme);
+        })();
+
         restoreCollapsedCards();
         setInterval(pollData, 3000);
         pollData();

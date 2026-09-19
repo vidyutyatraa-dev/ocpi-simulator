@@ -116,30 +116,46 @@ class CPOClient:
         }
         try:
             res = requests.post(url, json=payload, headers=self.bootstrap_headers, timeout=12)
-            log_ocpi_activity('OUT', 'credentials', url, 'POST', res.status_code, 'Credentials Handshake', {'request': payload, 'response': res.text[:500]})
-            return res.json() if res.status_code == 200 else {"error": res.text, "status_code": res.status_code}
+            try:
+                res_data = res.json()
+            except Exception:
+                res_data = {"raw": res.text, "status_code": res.status_code}
+            log_ocpi_activity('OUT', 'credentials', url, 'POST', res.status_code, 'Credentials Handshake', {'request': payload, 'response': res_data})
+            return res_data if res.status_code == 200 else {"error": res.text, "status_code": res.status_code}
         except Exception as e:
-            log_ocpi_activity('OUT', 'credentials', url, 'POST', 0, f'Credentials failed: {e}')
+            log_ocpi_activity('OUT', 'credentials', url, 'POST', 0, f'Credentials failed: {e}', {'request': payload, 'response': {'error': str(e)}})
             return {"error": str(e)}
 
     def get_locations(self) -> dict:
         """Fetch stations: GET /ocpi/cpo/2.2.1/locations"""
         url = f"{self.config.cpo_url.rstrip('/')}/ocpi/cpo/2.2.1/locations"
+        req_info = {"method": "GET", "url": url}
         try:
             res = requests.get(url, headers=self.headers, timeout=12)
-            log_ocpi_activity('OUT', 'locations', url, 'GET', res.status_code, 'Fetch Locations', {'response': res.text[:500]})
-            return res.json() if res.status_code == 200 else {"error": res.text, "status_code": res.status_code}
+            try:
+                res_data = res.json()
+            except Exception:
+                res_data = {"raw": res.text, "status_code": res.status_code}
+            log_ocpi_activity('OUT', 'locations', url, 'GET', res.status_code, 'Fetch Locations', {'request': req_info, 'response': res_data})
+            return res_data if res.status_code == 200 else {"error": res.text, "status_code": res.status_code}
         except Exception as e:
+            log_ocpi_activity('OUT', 'locations', url, 'GET', 0, f'Fetch Locations failed: {e}', {'request': req_info, 'response': {'error': str(e)}})
             return {"error": str(e)}
 
     def get_tariffs(self) -> dict:
         """Fetch tariffs: GET /ocpi/cpo/2.2.1/tariffs"""
         url = f"{self.config.cpo_url.rstrip('/')}/ocpi/cpo/2.2.1/tariffs"
+        req_info = {"method": "GET", "url": url}
         try:
             res = requests.get(url, headers=self.headers, timeout=12)
-            log_ocpi_activity('OUT', 'tariffs', url, 'GET', res.status_code, 'Fetch Tariffs', {'response': res.text[:500]})
-            return res.json() if res.status_code == 200 else {"error": res.text, "status_code": res.status_code}
+            try:
+                res_data = res.json()
+            except Exception:
+                res_data = {"raw": res.text, "status_code": res.status_code}
+            log_ocpi_activity('OUT', 'tariffs', url, 'GET', res.status_code, 'Fetch Tariffs', {'request': req_info, 'response': res_data})
+            return res_data if res.status_code == 200 else {"error": res.text, "status_code": res.status_code}
         except Exception as e:
+            log_ocpi_activity('OUT', 'tariffs', url, 'GET', 0, f'Fetch Tariffs failed: {e}', {'request': req_info, 'response': {'error': str(e)}})
             return {"error": str(e)}
 
     def put_token(self, token_uid: str = "RFID-TEST-001", valid: bool = True) -> dict:
@@ -161,9 +177,14 @@ class CPOClient:
         }
         try:
             res = requests.put(url, json=payload, headers=self.headers, timeout=12)
-            log_ocpi_activity('OUT', 'tokens', url, 'PUT', res.status_code, f'Register Token {token_uid}', {'payload': payload, 'response': res.text[:500]})
-            return res.json() if res.status_code == 200 else {"error": res.text, "status_code": res.status_code}
+            try:
+                res_data = res.json()
+            except Exception:
+                res_data = {"raw": res.text, "status_code": res.status_code}
+            log_ocpi_activity('OUT', 'tokens', url, 'PUT', res.status_code, f'Register Token {token_uid}', {'request': payload, 'response': res_data})
+            return res_data if res.status_code == 200 else {"error": res.text, "status_code": res.status_code}
         except Exception as e:
+            log_ocpi_activity('OUT', 'tokens', url, 'PUT', 0, f'Register Token failed: {e}', {'request': payload, 'response': {'error': str(e)}})
             return {"error": str(e)}
 
     def start_session(self, location_id: str, evse_uid: str, connector_id: int, token_uid: str) -> dict:
@@ -189,10 +210,14 @@ class CPOClient:
         }
         try:
             res = requests.post(url, json=payload, headers=self.headers, timeout=15)
-            log_ocpi_activity('OUT', 'commands', url, 'POST', res.status_code, f'START_SESSION -> callback: {response_url}', {'payload': payload, 'response': res.text[:500]})
-            return res.json() if res.status_code == 200 else {"error": res.text, "status_code": res.status_code}
+            try:
+                res_data = res.json()
+            except Exception:
+                res_data = {"raw": res.text, "status_code": res.status_code}
+            log_ocpi_activity('OUT', 'commands', url, 'POST', res.status_code, f'START_SESSION -> callback: {response_url}', {'request': payload, 'response': res_data})
+            return res_data if res.status_code == 200 else {"error": res.text, "status_code": res.status_code}
         except Exception as e:
-            log_ocpi_activity('OUT', 'commands', url, 'POST', 0, f'START_SESSION failed: {e}')
+            log_ocpi_activity('OUT', 'commands', url, 'POST', 0, f'START_SESSION failed: {e}', {'request': payload, 'response': {'error': str(e)}})
             return {"error": str(e)}
 
     def stop_session(self, session_id: str) -> dict:
@@ -205,10 +230,14 @@ class CPOClient:
         }
         try:
             res = requests.post(url, json=payload, headers=self.headers, timeout=15)
-            log_ocpi_activity('OUT', 'commands', url, 'POST', res.status_code, f'STOP_SESSION -> callback: {response_url}', {'payload': payload, 'response': res.text[:500]})
-            return res.json() if res.status_code == 200 else {"error": res.text, "status_code": res.status_code}
+            try:
+                res_data = res.json()
+            except Exception:
+                res_data = {"raw": res.text, "status_code": res.status_code}
+            log_ocpi_activity('OUT', 'commands', url, 'POST', res.status_code, f'STOP_SESSION -> callback: {response_url}', {'request': payload, 'response': res_data})
+            return res_data if res.status_code == 200 else {"error": res.text, "status_code": res.status_code}
         except Exception as e:
-            log_ocpi_activity('OUT', 'commands', url, 'POST', 0, f'STOP_SESSION failed: {e}')
+            log_ocpi_activity('OUT', 'commands', url, 'POST', 0, f'STOP_SESSION failed: {e}', {'request': payload, 'response': {'error': str(e)}})
             return {"error": str(e)}
 
     def get_sessions(self, session_id: str = "") -> dict:
@@ -216,16 +245,17 @@ class CPOClient:
         url = f"{self.config.cpo_url.rstrip('/')}/ocpi/cpo/2.2.1/sessions"
         if session_id:
             url = f"{url}/{session_id.strip()}"
+        req_info = {"method": "GET", "url": url, "session_id": session_id or "all"}
         try:
             res = requests.get(url, headers=self.headers, timeout=12)
             try:
                 res_json = res.json()
             except Exception:
-                res_json = {"raw": res.text}
-            log_ocpi_activity('OUT', 'sessions', url, 'GET', res.status_code, f'Get Sessions {"(" + session_id + ")" if session_id else ""}', {'response': res_json})
+                res_json = {"raw": res.text, "status_code": res.status_code}
+            log_ocpi_activity('OUT', 'sessions', url, 'GET', res.status_code, f'Get Sessions {"(" + session_id + ")" if session_id else ""}', {'request': req_info, 'response': res_json})
             return res_json if res.status_code == 200 else {"error": res.text, "status_code": res.status_code}
         except Exception as e:
-            log_ocpi_activity('OUT', 'sessions', url, 'GET', 0, f'Get Sessions failed: {e}')
+            log_ocpi_activity('OUT', 'sessions', url, 'GET', 0, f'Get Sessions failed: {e}', {'request': req_info, 'response': {'error': str(e)}})
             return {"error": str(e)}
 
     def get_cdrs(self, cdr_id: str = "") -> dict:
@@ -233,16 +263,17 @@ class CPOClient:
         url = f"{self.config.cpo_url.rstrip('/')}/ocpi/cpo/2.2.1/cdrs"
         if cdr_id:
             url = f"{url}/{cdr_id.strip()}"
+        req_info = {"method": "GET", "url": url, "cdr_id": cdr_id or "all"}
         try:
             res = requests.get(url, headers=self.headers, timeout=12)
             try:
                 res_json = res.json()
             except Exception:
-                res_json = {"raw": res.text}
-            log_ocpi_activity('OUT', 'cdrs', url, 'GET', res.status_code, f'Get CDRs {"(" + cdr_id + ")" if cdr_id else ""}', {'response': res_json})
+                res_json = {"raw": res.text, "status_code": res.status_code}
+            log_ocpi_activity('OUT', 'cdrs', url, 'GET', res.status_code, f'Get CDRs {"(" + cdr_id + ")" if cdr_id else ""}', {'request': req_info, 'response': res_json})
             return res_json if res.status_code == 200 else {"error": res.text, "status_code": res.status_code}
         except Exception as e:
-            log_ocpi_activity('OUT', 'cdrs', url, 'GET', 0, f'Get CDRs failed: {e}')
+            log_ocpi_activity('OUT', 'cdrs', url, 'GET', 0, f'Get CDRs failed: {e}', {'request': req_info, 'response': {'error': str(e)}})
             return {"error": str(e)}
 
 
